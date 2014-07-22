@@ -13,6 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        QDockFrame.cpp
+        QDockFrame.cpp \
+    QDockArrows.cpp
 
-HEADERS  += QDockFrame.h
+HEADERS  += QDockFrame.h \
+    QDockArrows.h \
+    QDockCommon.h
+
+RESOURCES += \
+    DockResource.qrc
