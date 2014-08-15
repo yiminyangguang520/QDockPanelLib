@@ -12,5 +12,5 @@ QDockFrame::~QDockFrame()
 
 void QDockFrame::showArrow()
 {
-    arrows.show(Left | Top | Right | Bottom /*| Center*/ | CenterLeft | CenterTop | CenterRight | CenterBottom);
+    arrows.show(Left | Top | Right | Bottom | Center | CenterLeft | CenterTop | CenterRight | CenterBottom);
 }
