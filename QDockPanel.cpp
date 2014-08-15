@@ -1,10 +1,12 @@
 #include "QDockPanel.h"
 #include <QResizeEvent>
 #include <QPainter>
+#include <QMouseEvent>
 
 QDockPanel::QDockPanel()
     :QWidget(NULL,Qt::FramelessWindowHint),
-     contensWidget(NULL),frameWidth(3),titleRectHeight(20)
+     contensWidget(NULL),frameWidth(3),titleRectHeight(20),
+     isPresedTitle(false)
 {
 
 }
@@ -42,4 +44,29 @@ void QDockPanel::resetContensWidgetPosAndSize()
 
     contensWidget->move(frameWidth,frameWidth * 2 + titleRectHeight);
     contensWidget->resize(width() - frameWidth * 2,height() - frameWidth * 2 - titleRectHeight);
+}
+
+
+void QDockPanel::mousePressEvent(QMouseEvent* e)
+{
+    if (e->buttons() ^ Qt::LeftButton || !titleRect.contains(e->pos()))
+    {
+        return;
+    }
+
+    diffPos = e->globalPos() - pos();
+    isPresedTitle = true;
+}
+
+void QDockPanel::mouseReleaseEvent(QMouseEvent *)
+{
+    isPresedTitle = false;
+}
+
+void QDockPanel::mouseMoveEvent(QMouseEvent* e)
+{
+    if (isPresedTitle)
+    {
+        move(e->globalPos() - diffPos);
+    }
 }
