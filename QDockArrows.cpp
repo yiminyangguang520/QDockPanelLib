@@ -38,7 +38,15 @@ QDockArrows::QDockArrows(QWidget *parent)
       centerBottomWid(new QArrowWidget("://ArrowPics/bottom.png",parent)),
       parentWid(parent)
 {
-
+    leftWid->hide();
+    rightWid->hide();
+    topWid->hide();
+    bottomWid->hide();
+    centerWid->hide();
+    centerLeftWid->hide();
+    centerRightWid->hide();
+    centerTopWid->hide();
+    centerBottomWid->hide();
 }
 
 void QDockArrows::show(int pos)
