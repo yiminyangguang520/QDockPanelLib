@@ -2,71 +2,166 @@
 #include <QResizeEvent>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QDrag>
+#include <QMimeData>
+#include <QCursor>
+#include <QByteArray>
+#include <QDataStream>
+#include "QDockDataBuilder.h"
+#include "QDockNode.h"
+#include <cassert>
+#include "QDockFrame.h"
+#include "QDockManager.h"
 
-QDockPanel::QDockPanel()
-    :QWidget(NULL,Qt::FramelessWindowHint),
-     contensWidget(NULL),frameWidth(3),titleRectHeight(20),
-     isPresedTitle(false)
+QDockPanel::QDockPanel(QDockManager* manager,QDockFrame* frame)
+    :QWidget(frame,Qt::FramelessWindowHint | Qt::Tool),
+	manager_(manager),frame_(frame),
+     contensWidget_(NULL),edgeWidth_(3),titleRectHeight_(20),
+	 isDocked_(false)
 {
-
+	title_ = new QDockPanelTitle(this);
+	connect(this,SIGNAL(windowTitleChanged(const QString&)),title_,SLOT(setTitle(const QString&)));
+	leftEdge_ = new QDockPanelEdgeLeft(this);
+	leftTopEdge_ = new QDockPanelEdgeLeftTop(this);
+	topEdge_ = new QDockPanelEdgeTop(this);
+	rightTopEdge_ = new QDockPanelEdgeRightTop(this);
+	rightEdge_ = new QDockPanelEdgeRight(this);
+	rightBottomEdge_ = new QDockPanelEdgeRightBottom(this);
+	bottomEdge_ = new QDockPanelEdgeBottom(this);
+	leftBottomEdge_ = new QDockPanelEdgeLeftBottom(this);
 }
+
 
 void QDockPanel::paintEvent(QPaintEvent*)
 {
     QPainter p(this);
-
-    p.fillRect(titleRect,Qt::blue);
-    p.setPen(QPen(Qt::white));
-    p.drawText(titleRect,Qt::AlignVCenter,windowTitle());
 }
 
-void QDockPanel::resizeEvent(QResizeEvent* e)
+void QDockPanel::resizeEvent(QResizeEvent*)
 {
-    titleRect.setLeft(frameWidth);
-    titleRect.setTop(frameWidth);
-    titleRect.setWidth(e->size().width() - frameWidth*2);
-    titleRect.setHeight(titleRectHeight);
-
-    resetContensWidgetPosAndSize();
+    relayout();
 }
 
 void QDockPanel::resetContensWidgetPosAndSize()
 {
-    if (!contensWidget)
+    if (!contensWidget_)
     {
         return;
     }
 
-    if (contensWidget->parentWidget() != this)
+    if (contensWidget_->parentWidget() != this)
     {
-        contensWidget->setParent(this);
+        contensWidget_->setParent(this);
     }
 
-    contensWidget->move(frameWidth,frameWidth * 2 + titleRectHeight);
-    contensWidget->resize(width() - frameWidth * 2,height() - frameWidth * 2 - titleRectHeight);
+	if (isDocked_)
+	{
+		contensWidget_->move(0,edgeWidth_ + titleRectHeight_);
+		contensWidget_->resize(width(),height() - edgeWidth_ - titleRectHeight_);
+	}
+	else
+	{
+		contensWidget_->move(edgeWidth_,edgeWidth_ * 2 + titleRectHeight_);
+		contensWidget_->resize(width() - edgeWidth_ * 2,height() - edgeWidth_ * 3 - titleRectHeight_);
+	}
 }
 
 
-void QDockPanel::mousePressEvent(QMouseEvent* e)
+void QDockPanel::relayout()
 {
-    if (e->buttons() ^ Qt::LeftButton || !titleRect.contains(e->pos()))
-    {
-        return;
-    }
+	if (isDocked_)
+	{
+		title_->move(0,0);
+		title_->resize(width(),titleRectHeight_);
 
-    diffPos = e->globalPos() - pos();
-    isPresedTitle = true;
+		leftEdge_->hide();
+		leftTopEdge_->hide();
+		topEdge_->hide();
+		rightTopEdge_->hide();
+		rightEdge_->hide();
+		rightBottomEdge_->hide();
+		bottomEdge_->hide();
+		leftBottomEdge_->hide();
+	}
+	else
+	{
+		title_->move(edgeWidth_,edgeWidth_);
+		title_->resize(width()-edgeWidth_*2,titleRectHeight_);
+
+		leftEdge_->move(0,edgeWidth_);
+		leftEdge_->resize(edgeWidth_,height()-edgeWidth_*2);
+
+		leftTopEdge_->move(0,0);
+		leftTopEdge_->resize(edgeWidth_,edgeWidth_);
+
+		topEdge_->move(edgeWidth_,0);
+		topEdge_->resize(width()-edgeWidth_*2,edgeWidth_);
+
+		rightTopEdge_->move(width()-edgeWidth_,0);
+		rightTopEdge_->resize(edgeWidth_,edgeWidth_);
+
+		rightEdge_->move(width()-edgeWidth_,edgeWidth_);
+		rightEdge_->resize(edgeWidth_,height()-edgeWidth_*2);
+
+		rightBottomEdge_->move(width()-edgeWidth_,height()-edgeWidth_);
+		rightBottomEdge_->resize(edgeWidth_,edgeWidth_);
+
+		bottomEdge_->move(edgeWidth_,height()-edgeWidth_);
+		bottomEdge_->resize(width()-edgeWidth_*2,edgeWidth_);
+
+		leftBottomEdge_->move(0,height()-edgeWidth_);
+		leftBottomEdge_->resize(edgeWidth_,edgeWidth_);
+	}
+
+	resetContensWidgetPosAndSize();
 }
 
-void QDockPanel::mouseReleaseEvent(QMouseEvent *)
+void QDockPanel::setDockStatus()
 {
-    isPresedTitle = false;
+	floatSize_ = size();
+	setWindowFlags(Qt::SubWindow);
+	relayout();
+	isDocked_ = true;
 }
 
-void QDockPanel::mouseMoveEvent(QMouseEvent* e)
+void QDockPanel::setFloatStatus()
 {
-    if (isPresedTitle)
-    {
-        move(e->globalPos() - diffPos);
-    }
+	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+	resize(floatSize_);
+	relayout();
+	isDocked_ = false;
+}
+
+bool QDockPanel::dockTo( QWidget* target /*= NULL*/ )
+{
+	return false;
+}
+
+void QDockPanel::unDock()
+{
+	QDockNode* parentNode = qobject_cast<QDockNode*>(parentWidget());
+	assert(parentNode);
+	setParent(frame_);
+	setFloatStatus();
+	if (manager_->isRootNode(parentNode))
+	{
+		QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
+		if (otherChildNode)
+		{
+			parentNode->setOrientation(otherChildNode->orientation());
+			parentNode->insertWidget(0,otherChildNode->widget(0));
+			parentNode->insertWidget(1,otherChildNode->widget(0));
+			delete otherChildNode;
+		}
+		return;
+	}
+
+	assert(parentNode->count() == 1);
+	QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
+	assert(grandParentNode);
+	QWidget* widget = parentNode->widget(0);
+	widget->setParent(grandParentNode);
+	int index = grandParentNode->indexOf(parentNode);
+	delete parentNode;
+	grandParentNode->insertWidget(index,widget);
 }

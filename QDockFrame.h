@@ -4,21 +4,44 @@
 #include <QtWidgets>
 #include "QDockCommon.h"
 #include "QDockArrows.h"
-#include "QDockPanel.h"
+#include <map>
+
+class QDockPanel;
+class QDockNode;
+class QDockMaskWidget;
+class QDockManager;
 
 class QDockFrame : public QWidget
 {
     Q_OBJECT
 
 public:
-    QDockFrame(QWidget *parent = 0);
+    explicit QDockFrame(QDockManager* manager, QWidget *parent);
     virtual ~QDockFrame();
     void showArrow();
 
-    QDockPanel* AddPanel(const QString& title, QPoint pos, QSize size, QWidget* contensWidget = NULL);
+	void relayout();
+protected:
+	virtual void dragEnterEvent( QDragEnterEvent * );
+
+	virtual void dragMoveEvent( QDragMoveEvent * );
+
+	virtual void dragLeaveEvent( QDragLeaveEvent * );
+
+	virtual void dropEvent( QDropEvent * );
+
+	virtual void resizeEvent( QResizeEvent * );
 
 private:
-    QDockArrows arrows;
+    QDockArrows arrows_;
+	QDockNode* rootNode_;
+	QDockMaskWidget* maskWidget_;
+	std::map<int,QDockPanel*> dockPanels_;
+	QDockManager* manager_;
+
+	DockArea lastMaskArea_;
+
+	friend QDockManager;
 };
 
 #endif // QDOCKFRAME_H

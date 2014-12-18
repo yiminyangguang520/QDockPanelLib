@@ -15,8 +15,9 @@ class QDockArrows : public QObject
 public:
     explicit QDockArrows(QWidget *parent = 0);
 
-    void show(int pos);
+    void show(int dockArea);
 
+	DockArea getDockAreaByPos(QPoint pos);
 private:
     QArrowWidget* leftWid;
     QArrowWidget* topWid;
@@ -29,9 +30,6 @@ private:
     QArrowWidget* centerBottomWid;
 
     QWidget* parentWid;
-
-signals:
-
 public slots:
 
 };

@@ -3,42 +3,68 @@
 
 #include <QWidget>
 
+#include "QDockPanelComponents.h"
+
+class QDockManager;
+class QDockFrame;
+
 class QDockPanel : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QDockPanel();
+    explicit QDockPanel(QDockManager* manager,QDockFrame* frame);
 
-    QWidget* getContensWidget(){return contensWidget;}
+    QWidget* getContensWidget(){return contensWidget_;}
     QWidget* resetContensWidget(QWidget* newWidget)
    {
-        QWidget* old = contensWidget;
-        contensWidget = newWidget;
+        QWidget* old = contensWidget_;
+        contensWidget_ = newWidget;
         resetContensWidgetPosAndSize();
 
         return old;
     }
 
+	void setId(int id){id_ = id;}
+	int id(){return id_;}
+
+	bool isDocked(){return isDocked_;}
+	bool dockTo(QWidget* target = NULL);
+	void unDock();
+private:
+	void resizeWidget(int curX,int curY);
+	void relayout();
+	void setDockStatus();
+	void setFloatStatus();
+
 signals:
 
-public slots:
-
 private:
-    int titleRectHeight;    // panel窗口的标题栏的高度.
-    QRect titleRect;        // panel窗口的标题栏的位置.
-    QWidget* contensWidget; // panel窗口内的widget.
-    int frameWidth;         // 边框的宽度.
-    bool isPresedTitle;     // 是否在标题栏中按下了鼠标左键.
-    QPoint diffPos;         // 鼠标按下时鼠标的位置和窗口位置的差值.
+	int id_;	//panel ID
+    int titleRectHeight_;    // panel���ڵı������ĸ߶�.
+    QWidget* contensWidget_; // panel�����ڵ�widget.
+    int edgeWidth_;         // �߿�Ŀ���.
+	bool isDocked_;
+	QSize floatSize_;
+	QDockManager* manager_;
+	QDockFrame* frame_;
 
+	QDockPanelTitle* title_;
+	QDockPanelEdgeLeft* leftEdge_;
+	QDockPanelEdgeTop* topEdge_;
+	QDockPanelEdgeRight* rightEdge_;
+	QDockPanelEdgeBottom* bottomEdge_;
+	QDockPanelEdgeLeftTop* leftTopEdge_;
+	QDockPanelEdgeRightTop* rightTopEdge_;
+	QDockPanelEdgeRightBottom* rightBottomEdge_;
+	QDockPanelEdgeLeftBottom* leftBottomEdge_;
 
 protected:
     void paintEvent(QPaintEvent*);
     void resizeEvent(QResizeEvent* e);
     void resetContensWidgetPosAndSize();
-    void mousePressEvent(QMouseEvent* e);
-    void mouseReleaseEvent(QMouseEvent *);
-    void mouseMoveEvent(QMouseEvent* e);
+
+	friend QDockManager;
+	friend QDockPanelTitle;
 };
 
 #endif // QDOCKPANEL_H
