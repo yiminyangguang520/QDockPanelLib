@@ -7,7 +7,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
 	QDockManager* manager = new QDockManager(NULL);
-	manager->getDokcFrame()->show();
+	QDockFrame* frame = manager->getDockFrame();
+	frame->resize(700,500);
+	frame->show();
 	QWidget* widget1 = new QWidget;
 	widget1->setAutoFillBackground(true);
 	widget1->setPalette(QPalette(Qt::red));

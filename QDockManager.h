@@ -17,7 +17,7 @@ public:
 	QDockManager(QWidget *parent);
 	~QDockManager();
 
-	QDockFrame* getDokcFrame(){return dockFrmae_;}
+	QDockFrame* getDockFrame(){return dockFrmae_;}
 	QDockPanel* addPanel(int id, const QString& title, QPoint pos, QSize size, QWidget* contensWidget = NULL);
 	QDockPanel* getDockPanelByID(int id);
 
