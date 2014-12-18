@@ -21,18 +21,26 @@ void QDockMaskWidget::showOnDockArea( DockArea area )
 	switch (area)
 	{
 	case LeftArea:
+		rc.setWidth(rc.width()*3/10);
+		break;
 	case CenterLeftArea:
 		rc.setWidth(rc.width()/2);
 		break;
 	case TopArea:
+		rc.setHeight(rc.height()*3/10);
+		break;
 	case CenterTopArea:
 		rc.setHeight(rc.height()/2);
 		break;
 	case RightArea:
+		rc.setLeft(rc.left()+rc.width()*7/10);
+		break;
 	case CenterRightArea:
 		rc.setLeft(rc.left()+rc.width()/2);
 		break;
 	case BottomArea:
+		rc.setTop(rc.top()+rc.height()*7/10);
+		break;
 	case CenterBottomArea:
 		rc.setTop(rc.top()+rc.height()/2);
 		break;

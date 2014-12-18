@@ -3,6 +3,7 @@
 #include "QDockPanel.h"
 #include <cassert>
 #include "QDockNode.h"
+#include <QList>
 
 QDockManager::QDockManager(QWidget *parent)
 	: QObject(parent),dockFrmae_(new QDockFrame(this,parent))
@@ -50,12 +51,17 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 	{
 	case LeftArea:
 		{
+			QList<int> sizes;
+			sizes.push_back(30);
+			sizes.push_back(70);
+
 			int c = dockFrmae_->rootNode_->count();
 			if (c == 1)
 			{
 				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 				panel->setDockStatus();
  				dockFrmae_->rootNode_->insertWidget(0,panel);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
@@ -66,7 +72,7 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 				dockFrmae_->rootNode_->insertWidget(0,panel);
 				dockFrmae_->rootNode_->insertWidget(1,tmpNode);
 				dockFrmae_->relayout();
-				panel->resize(tmpNode->width()/2,tmpNode->height());
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -76,12 +82,17 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 		}
 	case TopArea:
 		{
+			QList<int> sizes;
+			sizes.push_back(30);
+			sizes.push_back(70);
+
 			int c = dockFrmae_->rootNode_->count();
 			if (c == 1)
 			{
 				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 				panel->setDockStatus();
 				dockFrmae_->rootNode_->insertWidget(0,panel);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
@@ -92,7 +103,7 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 				dockFrmae_->rootNode_->insertWidget(0,panel);
 				dockFrmae_->rootNode_->insertWidget(1,tmpNode);
 				dockFrmae_->relayout();
-				panel->resize(tmpNode->width(),tmpNode->height()/2);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -102,12 +113,17 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 		}
 	case RightArea:
 		{
+			QList<int> sizes;
+			sizes.push_back(70);
+			sizes.push_back(30);
+
 			int c = dockFrmae_->rootNode_->count();
 			if (c == 1)
 			{
 				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 				panel->setDockStatus();
 				dockFrmae_->rootNode_->insertWidget(1,panel);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
@@ -118,7 +134,7 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 				dockFrmae_->rootNode_->insertWidget(0,tmpNode);
 				dockFrmae_->rootNode_->insertWidget(1,panel);
 				dockFrmae_->relayout();
-				panel->resize(tmpNode->width()/2,tmpNode->height());
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -128,12 +144,17 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 		}
 	case BottomArea:
 		{
+			QList<int> sizes;
+			sizes.push_back(70);
+			sizes.push_back(30);
+
 			int c = dockFrmae_->rootNode_->count();
 			if (c == 1)
 			{
 				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 				panel->setDockStatus();
 				dockFrmae_->rootNode_->insertWidget(0,panel);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
@@ -144,7 +165,7 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 				dockFrmae_->rootNode_->insertWidget(0,tmpNode);
 				dockFrmae_->rootNode_->insertWidget(1,panel);
 				dockFrmae_->relayout();
-				panel->resize(tmpNode->width(),tmpNode->height()/2);
+				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
