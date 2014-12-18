@@ -12,12 +12,13 @@
 #include <cassert>
 #include "QDockFrame.h"
 #include "QDockManager.h"
+#include "QDockArrows.h"
+#include "QDockMaskWidget.h"
 
-QDockPanel::QDockPanel(QDockManager* manager,QDockFrame* frame)
+QDockPanel::QDockPanel(QDockManager* manager,QWidget* frame)
     :QWidget(frame,Qt::FramelessWindowHint | Qt::Tool),
-	manager_(manager),frame_(frame),
-     contensWidget_(NULL),edgeWidth_(3),titleRectHeight_(20),
-	 isDocked_(false)
+	manager_(manager),contensWidget_(NULL),
+	edgeWidth_(3),titleRectHeight_(20),isDocked_(false)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this,SIGNAL(windowTitleChanged(const QString&)),title_,SLOT(setTitle(const QString&)));
@@ -137,31 +138,7 @@ bool QDockPanel::dockTo( QWidget* target /*= NULL*/ )
 	return false;
 }
 
-void QDockPanel::unDock()
+void QDockPanel::undock()
 {
-	QDockNode* parentNode = qobject_cast<QDockNode*>(parentWidget());
-	assert(parentNode);
-	setParent(frame_);
-	setFloatStatus();
-	if (manager_->isRootNode(parentNode))
-	{
-		QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
-		if (otherChildNode)
-		{
-			parentNode->setOrientation(otherChildNode->orientation());
-			parentNode->insertWidget(0,otherChildNode->widget(0));
-			parentNode->insertWidget(1,otherChildNode->widget(0));
-			delete otherChildNode;
-		}
-		return;
-	}
-
-	assert(parentNode->count() == 1);
-	QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
-	assert(grandParentNode);
-	QWidget* widget = parentNode->widget(0);
-	widget->setParent(grandParentNode);
-	int index = grandParentNode->indexOf(parentNode);
-	delete parentNode;
-	grandParentNode->insertWidget(index,widget);
+	manager_->undockPanel(this);
 }

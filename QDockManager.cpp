@@ -194,3 +194,32 @@ bool QDockManager::isRootNode( QDockNode* node )
 {
 	return node == dockFrmae_->rootNode_;
 }
+
+void QDockManager::undockPanel( QDockPanel* panel )
+{
+	QDockNode* parentNode = qobject_cast<QDockNode*>(panel->parentWidget());
+	assert(parentNode);
+	panel->setParent(dockFrmae_);
+	panel->setFloatStatus();
+	if (isRootNode(parentNode))
+	{
+		QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
+		if (otherChildNode)
+		{
+			parentNode->setOrientation(otherChildNode->orientation());
+			parentNode->insertWidget(0,otherChildNode->widget(0));
+			parentNode->insertWidget(1,otherChildNode->widget(0));
+			delete otherChildNode;
+		}
+		return;
+	}
+
+	assert(parentNode->count() == 1);
+	QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
+	assert(grandParentNode);
+	QWidget* widget = parentNode->widget(0);
+	widget->setParent(grandParentNode);
+	int index = grandParentNode->indexOf(parentNode);
+	delete parentNode;
+	grandParentNode->insertWidget(index,widget);
+}

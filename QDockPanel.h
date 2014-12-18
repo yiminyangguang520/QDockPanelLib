@@ -6,13 +6,12 @@
 #include "QDockPanelComponents.h"
 
 class QDockManager;
-class QDockFrame;
 
 class QDockPanel : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QDockPanel(QDockManager* manager,QDockFrame* frame);
+    explicit QDockPanel(QDockManager* manager,QWidget* frame);
 
     QWidget* getContensWidget(){return contensWidget_;}
     QWidget* resetContensWidget(QWidget* newWidget)
@@ -29,7 +28,7 @@ public:
 
 	bool isDocked(){return isDocked_;}
 	bool dockTo(QWidget* target = NULL);
-	void unDock();
+	void undock();
 private:
 	void resizeWidget(int curX,int curY);
 	void relayout();
@@ -46,7 +45,6 @@ private:
 	bool isDocked_;
 	QSize floatSize_;
 	QDockManager* manager_;
-	QDockFrame* frame_;
 
 	QDockPanelTitle* title_;
 	QDockPanelEdgeLeft* leftEdge_;

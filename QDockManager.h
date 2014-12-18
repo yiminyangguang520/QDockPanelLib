@@ -25,6 +25,8 @@ public:
 	bool dockPanelToPanel(QDockPanel* panel1,QDockPanel* panel2);
 
 	bool isRootNode(QDockNode* node);
+
+	void undockPanel(QDockPanel* panel);
 private:
 	QDockFrame* dockFrmae_;
 	std::map<int,QDockPanel*> dockPanels_;

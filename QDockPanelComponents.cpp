@@ -51,7 +51,7 @@ void QDockPanelTitle::mouseMoveEvent( QMouseEvent* e )
 	QDockPanel* panel = qobject_cast<QDockPanel*>(parentWidget());
 	if (panel && panel->isDocked_)
 	{
-		panel->unDock();
+		panel->undock();
 	}
 
 	if (QApplication::keyboardModifiers ()!= Qt::ControlModifier)
