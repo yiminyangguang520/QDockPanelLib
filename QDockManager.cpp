@@ -206,9 +206,11 @@ void QDockManager::undockPanel( QDockPanel* panel )
 		QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
 		if (otherChildNode)
 		{
+			QList<int> sizes = otherChildNode->sizes();
 			parentNode->setOrientation(otherChildNode->orientation());
 			parentNode->insertWidget(0,otherChildNode->widget(0));
 			parentNode->insertWidget(1,otherChildNode->widget(0));
+			parentNode->setSizes(sizes);
 			delete otherChildNode;
 		}
 		return;
@@ -217,9 +219,11 @@ void QDockManager::undockPanel( QDockPanel* panel )
 	assert(parentNode->count() == 1);
 	QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
 	assert(grandParentNode);
+	QList<int> sizes = grandParentNode->sizes();
 	QWidget* widget = parentNode->widget(0);
 	widget->setParent(grandParentNode);
 	int index = grandParentNode->indexOf(parentNode);
 	delete parentNode;
 	grandParentNode->insertWidget(index,widget);
+	grandParentNode->setSizes(sizes);
 }
