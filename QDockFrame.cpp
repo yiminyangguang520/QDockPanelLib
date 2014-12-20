@@ -65,13 +65,23 @@ void QDockFrame::dragMoveEvent( QDragMoveEvent* e )
 
 void QDockFrame::dragLeaveEvent( QDragLeaveEvent* e )
 {
-	arrows_.show(NoneArea);
+	if (!rect().contains(mapFromGlobal(QCursor::pos())))
+	{
+		arrows_.show(NoneArea);
+	}
+	lastMaskArea_ = NoneArea;
+	maskWidget_->showOnDockArea(NoneArea);
 	e->accept();
 }
 
 void QDockFrame::dropEvent( QDropEvent* e )
 {
 	const QMimeData* mimeData = e->mimeData();
+	if (!mimeData->hasFormat("dockpanellib/dockdata"))
+	{
+		e->ignore();
+		return;
+	}
 	QByteArray ba = mimeData->data("dockpanellib/dockdata");
 	QDockDataBuilder builder;
 	builder.fromByteArray(ba);
@@ -104,4 +114,27 @@ void QDockFrame::relayout()
 	{
 		rootNode_->show();
 	}
+}
+
+void QDockFrame::onDragEnterPanel()
+{
+	showArrow();
+	maskWidget_->showOnDockArea(NoneArea);
+}
+
+void QDockFrame::onDragLeavePanel()
+{
+	if (!rect().contains(mapFromGlobal(QCursor::pos())))
+	{
+		arrows_.show(NoneArea);
+	}
+	lastMaskArea_ = NoneArea;
+	maskWidget_->showOnDockArea(NoneArea);
+}
+
+void QDockFrame::onEndDragAtPanel()
+{
+	arrows_.show(NoneArea);
+	lastMaskArea_ = NoneArea;
+	maskWidget_->showOnDockArea(NoneArea);
 }

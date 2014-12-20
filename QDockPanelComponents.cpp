@@ -10,7 +10,7 @@
 
 QDockPanelTitle::QDockPanelTitle( QWidget *parent ) :QWidget(parent),isLBtnPressed_(false)
 {
-	setPalette(QPalette(Qt::blue));
+	setPalette(QPalette(Qt::lightGray));
 	setAutoFillBackground(true);
 }
 
@@ -41,7 +41,7 @@ void QDockPanelTitle::mouseReleaseEvent( QMouseEvent* )
 	isLBtnPressed_ = false;
 }
 
-void QDockPanelTitle::mouseMoveEvent( QMouseEvent* e )
+void QDockPanelTitle::mouseMoveEvent( QMouseEvent* e)
 {
 	if (!isLBtnPressed_)
 	{
@@ -56,33 +56,31 @@ void QDockPanelTitle::mouseMoveEvent( QMouseEvent* e )
 
 	if (QApplication::keyboardModifiers ()!= Qt::ControlModifier)
 	{
-		QMimeData* mimeData = new QMimeData;
-		QDockDataBuilder data;
-		data.setWidget(parentWidget());
-		mimeData->setData("dockpanellib/dockdata",data.toByteArray());
-		QDrag* drag = new QDrag(this);
-		QPixmap pic(parentWidget()->size());
-		parentWidget()->render(&pic);
-		drag->setPixmap(pic);
-		drag->setMimeData(mimeData);
-		parentWidget()->hide();
-		switch (drag->start())
-		{
-		case Qt::IgnoreAction:
-			{
-				parentWidget()->move(QCursor::pos());
-			}
-			break;
-			// 	case Qt::CopyAction:
-			// 		move(QCursor::pos());
-			// 		break;
-		}
-		parentWidget()->show();
-		isLBtnPressed_ = false;
+		startDrag();
 		return;
 	}
 
 	parentWidget()->move(parentOldPos_.x()+e->globalX()-pressedPos_.x(),parentOldPos_.y()+e->globalY()-pressedPos_.y());
+}
+
+void QDockPanelTitle::startDrag()
+{
+	QMimeData* mimeData = new QMimeData;
+	QDockDataBuilder data;
+	data.setWidget(parentWidget());
+	mimeData->setData("dockpanellib/dockdata",data.toByteArray());
+	QDrag drag(this);
+	QPixmap pic(parentWidget()->size());
+	parentWidget()->render(&pic);
+	drag.setPixmap(pic);
+	drag.setMimeData(mimeData);
+	parentWidget()->hide();
+	if (drag.start() == Qt::IgnoreAction)
+	{
+		parentWidget()->move(QCursor::pos());
+	}
+	parentWidget()->show();
+	isLBtnPressed_ = false;
 }
 
 QDockPanelEdgeLeft::QDockPanelEdgeLeft( QWidget *parent ) :QWidget(parent),isLBtnPressed_(false)

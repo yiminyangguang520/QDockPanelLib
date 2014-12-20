@@ -22,14 +22,22 @@ public:
 	QDockPanel* getDockPanelByID(int id);
 
 	bool dockPanelToFrame(QDockPanel* panel,DockArea area);
-	bool dockPanelToPanel(QDockPanel* panel1,QDockPanel* panel2);
+	bool dockPanelToPanel(QDockPanel* from,QDockPanel* target, DockArea area);
 
 	bool isRootNode(QDockNode* node);
 
 	void undockPanel(QDockPanel* panel);
+
+private:
+	void onDragEnterPanel();
+	void onDragLeavePanel();
+	void onEndDragAtPanel();
 private:
 	QDockFrame* dockFrmae_;
 	std::map<int,QDockPanel*> dockPanels_;
+
+	friend QDockPanel;
+	friend QDockFrame;
 };
 
 #endif // QDOCKMANAGER_H

@@ -4,6 +4,8 @@
 #include <cassert>
 #include "QDockNode.h"
 #include <QList>
+#include "QDockMaskWidget.h"
+#include "QDockTabWidget.h"
 
 QDockManager::QDockManager(QWidget *parent)
 	: QObject(parent),dockFrmae_(new QDockFrame(this,parent))
@@ -185,8 +187,152 @@ bool QDockManager::dockPanelToFrame( QDockPanel* panel,DockArea area )
 	return true;
 }
 
-bool QDockManager::dockPanelToPanel( QDockPanel* panel1,QDockPanel* panel2 )
+bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockArea area )
 {
+	QList<int> sizes;
+	sizes.push_back(5);
+	sizes.push_back(5);
+
+	if (target->isDocked())
+	{
+		QDockNode* parentNode = qobject_cast<QDockNode*>(target->parentWidget());
+		if (parentNode)
+		{
+			if (parentNode->count() == 1)
+			{
+				assert(isRootNode(parentNode));
+				switch (area)
+				{
+				case CenterLeftArea:
+					from->setDockStatus();
+					parentNode->setOrientation(Qt::Horizontal);
+					parentNode->insertWidget(0,from);
+					parentNode->setSizes(sizes);
+					break;
+				case CenterTopArea:
+					from->setDockStatus();
+					parentNode->setOrientation(Qt::Vertical);
+					parentNode->insertWidget(0,from);
+					parentNode->setSizes(sizes);
+					break;
+				case CenterRightArea:
+					from->setDockStatus();
+					parentNode->setOrientation(Qt::Horizontal);
+					parentNode->insertWidget(1,from);
+					parentNode->setSizes(sizes);
+					break;
+				case CenterBottomArea:
+					from->setDockStatus();
+					parentNode->setOrientation(Qt::Vertical);
+					parentNode->insertWidget(1,from);
+					parentNode->setSizes(sizes);
+					break;
+				case CenterArea:
+					{
+						QDockPanel* tabPanel = new QDockPanel(this,dockFrmae_);
+						tabPanel->setAcceptDrops(false);
+						QDockTabWidget* tabWidget = new QDockTabWidget(tabPanel);
+						tabPanel->resetContensWidget(tabWidget);
+						tabWidget->addTab(target,target->windowTitle());
+						from->setDockStatus();
+						from->isTabbed_ = true;
+						from->parentTabWidget_ = tabWidget;
+						tabWidget->addTab(from,from->windowTitle());
+						target->isTabbed_ = true;
+						target->parentTabWidget_ = tabWidget;
+						tabPanel->resize(target->size());
+						tabPanel->setDockStatus();
+						parentNode->insertWidget(0,tabPanel);
+						connect(tabWidget,SIGNAL(setBasePanelTitle(const QString&)),tabPanel,SLOT(setWindowTitle(const QString &)));
+						tabPanel->setWindowTitle(tabWidget->currentWidget()->windowTitle());
+					}
+					break;
+				default:
+					return false;
+				}
+				return true;
+			}
+
+			int parentIndex = parentNode->indexOf(target);
+			QList<int> parentSizes = parentNode->sizes();
+
+			QDockNode* node = new QDockNode(NULL);
+			switch (area)
+			{
+			case CenterLeftArea:
+				from->setDockStatus();
+				node->setOrientation(Qt::Horizontal);
+				node->insertWidget(0,from);
+				node->insertWidget(1,target);
+				node->setSizes(sizes);
+				parentNode->insertWidget(parentIndex,node);
+				parentNode->setSizes(parentSizes);
+				break;
+			case CenterTopArea:
+				from->setDockStatus();
+				node->setOrientation(Qt::Vertical);
+				node->insertWidget(0,from);
+				node->insertWidget(1,target);
+				node->setSizes(sizes);
+				parentNode->insertWidget(parentIndex,node);
+				parentNode->setSizes(parentSizes);
+				break;
+			case CenterRightArea:
+				from->setDockStatus();
+				node->setOrientation(Qt::Horizontal);
+				node->insertWidget(0,target);
+				node->insertWidget(1,from);
+				node->setSizes(sizes);
+				parentNode->insertWidget(parentIndex,node);
+				parentNode->setSizes(parentSizes);
+				break;
+			case CenterBottomArea:
+				from->setDockStatus();
+				node->setOrientation(Qt::Vertical);
+				node->insertWidget(0,target);
+				node->insertWidget(1,from);
+				node->setSizes(sizes);
+				parentNode->insertWidget(parentIndex,node);
+				parentNode->setSizes(parentSizes);
+				break;
+			case CenterArea:
+				{
+					QDockPanel* tabPanel = new QDockPanel(this,dockFrmae_);
+					tabPanel->setAcceptDrops(false);
+					QDockTabWidget* tabWidget = new QDockTabWidget(tabPanel);
+					tabPanel->resetContensWidget(tabWidget);
+					tabWidget->addTab(target,target->windowTitle());
+					from->setDockStatus();
+					from->isTabbed_ = true;
+					from->parentTabWidget_ = tabWidget;
+					tabWidget->addTab(from,from->windowTitle());
+					target->isTabbed_ = true;
+					target->parentTabWidget_ = tabWidget;
+					tabPanel->resize(target->size());
+					tabPanel->setDockStatus();
+					parentNode->insertWidget(parentIndex,tabPanel);
+					parentNode->setSizes(sizes);
+					connect(tabWidget,SIGNAL(setBasePanelTitle(const QString&)),tabPanel,SLOT(setWindowTitle(const QString &)));
+					tabPanel->setWindowTitle(tabWidget->currentWidget()->windowTitle());
+				}
+				break;
+			default:
+				return false;
+			}
+
+			return true;
+		}
+
+		if (target->isTabbed_)
+		{
+			target->parentTabWidget_->addTab(from,from->windowTitle());
+
+			return true;
+		}
+
+		assert(false);
+		return false;
+	}
 	return false;
 }
 
@@ -198,32 +344,56 @@ bool QDockManager::isRootNode( QDockNode* node )
 void QDockManager::undockPanel( QDockPanel* panel )
 {
 	QDockNode* parentNode = qobject_cast<QDockNode*>(panel->parentWidget());
-	assert(parentNode);
-	panel->setParent(dockFrmae_);
-	panel->setFloatStatus();
-	if (isRootNode(parentNode))
+	if (parentNode)
 	{
-		QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
-		if (otherChildNode)
+		panel->setParent(dockFrmae_);
+		panel->setFloatStatus();
+		if (isRootNode(parentNode))
 		{
-			QList<int> sizes = otherChildNode->sizes();
-			parentNode->setOrientation(otherChildNode->orientation());
-			parentNode->insertWidget(0,otherChildNode->widget(0));
-			parentNode->insertWidget(1,otherChildNode->widget(0));
-			parentNode->setSizes(sizes);
-			delete otherChildNode;
+			QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
+			if (otherChildNode)
+			{
+				QList<int> sizes = otherChildNode->sizes();
+				parentNode->setOrientation(otherChildNode->orientation());
+				parentNode->insertWidget(0,otherChildNode->widget(0));
+				parentNode->insertWidget(1,otherChildNode->widget(0));
+				parentNode->setSizes(sizes);
+				otherChildNode->deleteLater();
+			}
+			return;
 		}
+
+		assert(parentNode->count() == 1);
+		QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
+		assert(grandParentNode);
+		QList<int> sizes = grandParentNode->sizes();
+		QWidget* widget = parentNode->widget(0);
+		int index = grandParentNode->indexOf(parentNode);
+		parentNode->close();
+		parentNode->deleteLater();
+		grandParentNode->insertWidget(index,widget);
+		grandParentNode->setSizes(sizes);
+
 		return;
 	}
 
-	assert(parentNode->count() == 1);
-	QDockNode* grandParentNode = qobject_cast<QDockNode*>(parentNode->parentWidget());
-	assert(grandParentNode);
-	QList<int> sizes = grandParentNode->sizes();
-	QWidget* widget = parentNode->widget(0);
-	widget->setParent(grandParentNode);
-	int index = grandParentNode->indexOf(parentNode);
-	delete parentNode;
-	grandParentNode->insertWidget(index,widget);
-	grandParentNode->setSizes(sizes);
+	panel->setParent(dockFrmae_);
+	panel->setFloatStatus();
+
+	return;
+}
+
+void QDockManager::onDragEnterPanel()
+{
+	dockFrmae_->onDragEnterPanel();
+}
+
+void QDockManager::onDragLeavePanel()
+{
+	dockFrmae_->onDragLeavePanel();
+}
+
+void QDockManager::onEndDragAtPanel()
+{
+	dockFrmae_->onEndDragAtPanel();
 }

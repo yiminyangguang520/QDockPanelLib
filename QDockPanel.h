@@ -2,10 +2,13 @@
 #define QDOCKPANEL_H
 
 #include <QWidget>
-
+#include "QDockCommon.h"
 #include "QDockPanelComponents.h"
+#include "QDockArrows.h"
 
 class QDockManager;
+class QDockMaskWidget;
+class QDockTabWidget;
 
 class QDockPanel : public QWidget
 {
@@ -27,14 +30,15 @@ public:
 	int id(){return id_;}
 
 	bool isDocked(){return isDocked_;}
-	bool dockTo(QWidget* target = NULL);
+	bool dockTo(QWidget* target, DockArea area);
 	void undock();
+	void startDrag();
 private:
 	void resizeWidget(int curX,int curY);
 	void relayout();
 	void setDockStatus();
 	void setFloatStatus();
-
+	void setTabbedStatus(bool isTabbed,QDockTabWidget* parentTabWidget);
 signals:
 
 private:
@@ -45,6 +49,12 @@ private:
 	bool isDocked_;
 	QSize floatSize_;
 	QDockManager* manager_;
+	QDockArrows arrows_;
+	DockArea lastMaskArea_;
+	QDockMaskWidget* maskWidget_;
+
+	bool isTabbed_;
+	QDockTabWidget* parentTabWidget_;
 
 	QDockPanelTitle* title_;
 	QDockPanelEdgeLeft* leftEdge_;
@@ -56,13 +66,24 @@ private:
 	QDockPanelEdgeRightBottom* rightBottomEdge_;
 	QDockPanelEdgeLeftBottom* leftBottomEdge_;
 
+private:
+	void showArrow();
 protected:
     void paintEvent(QPaintEvent*);
     void resizeEvent(QResizeEvent* e);
     void resetContensWidgetPosAndSize();
 
+	virtual void dragEnterEvent( QDragEnterEvent * );
+
+	virtual void dragMoveEvent( QDragMoveEvent * );
+
+	virtual void dragLeaveEvent( QDragLeaveEvent * );
+
+	virtual void dropEvent( QDropEvent * );
+
 	friend QDockManager;
 	friend QDockPanelTitle;
+	friend QDockTabWidget;
 };
 
 #endif // QDOCKPANEL_H

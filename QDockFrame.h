@@ -41,6 +41,11 @@ private:
 
 	DockArea lastMaskArea_;
 
+
+private:
+	void onDragEnterPanel();
+	void onDragLeavePanel();
+	void onEndDragAtPanel();
 	friend QDockManager;
 };
 

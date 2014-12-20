@@ -15,11 +15,8 @@ public:
 
 public slots:
 	void setTitle(const QString& title);
+	void startDrag();
 
-signals:
-	Qt::DropAction startDrag();
-	void dragMoving();
-	void endDrag(Qt::DropAction);
 private:
 	virtual void mousePressEvent( QMouseEvent* e);
 
