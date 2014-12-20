@@ -321,10 +321,23 @@ bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockAr
 
 		if (target->isTabbed_)
 		{
-			QDockTabWidget* tabWidget = qobject_cast<QDockTabWidget*>(target->parentTabPanel_->contensWidget_);
-			from->setDockStatus();
-			from->setTabbedStatus(true,target->parentTabPanel_);
-			tabWidget->addTab(from,from->windowTitle());
+			switch (area)
+			{
+			case CenterArea:
+				{
+					QDockTabWidget* tabWidget = qobject_cast<QDockTabWidget*>(target->parentTabPanel_->contensWidget_);
+					from->setDockStatus();
+					from->setTabbedStatus(true,target->parentTabPanel_);
+					tabWidget->addTab(from,from->windowTitle());
+				}
+				break;
+			case CenterLeftArea:
+			case CenterTopArea:
+			case CenterRightArea:
+			case CenterBottomArea:
+				dockPanelToPanel(from,target->parentTabPanel_,area);
+				break;
+			}
 
 			return true;
 		}
