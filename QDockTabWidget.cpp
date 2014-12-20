@@ -50,14 +50,28 @@ void QDockTabWidget::tabRemoved( int )
 		QDockPanel* panel = qobject_cast<QDockPanel*>(widget(0));
 		QDockPanel* parentPanel = qobject_cast<QDockPanel*>(parentWidget());
 		QDockNode* parentNode = qobject_cast<QDockNode*>(parentPanel->parentWidget());
-		QList<int> sizes = parentNode->sizes();
-		int thisIndex = parentNode->indexOf(parentPanel);
-		parentPanel->setParent(NULL);
-		parentPanel->close();
-		parentPanel->deleteLater();
-		panel->setTabbedStatus(false,NULL);
-		parentNode->insertWidget(thisIndex,panel);
-		parentNode->setSizes(sizes);
-		return;
+		if (parentNode)
+		{
+			QList<int> sizes = parentNode->sizes();
+			int thisIndex = parentNode->indexOf(parentPanel);
+			parentPanel->setParent(NULL);
+			parentPanel->close();
+			parentPanel->deleteLater();
+			panel->setTabbedStatus(false,NULL);
+			parentNode->insertWidget(thisIndex,panel);
+			parentNode->setSizes(sizes);
+		}
+		else
+		{
+			panel->undock();
+			panel->show();
+			panel->move(parentPanel->pos());
+			panel->resize(parentPanel->size());
+
+			parentPanel->setParent(NULL);
+			parentPanel->close();
+			parentPanel->deleteLater();
+		}
+
 	}
 }

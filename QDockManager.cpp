@@ -345,6 +345,11 @@ bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockAr
 		assert(false);
 		return false;
 	}
+	else
+	{
+
+	}
+
 	return false;
 }
 
