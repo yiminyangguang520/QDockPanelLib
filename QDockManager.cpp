@@ -235,11 +235,9 @@ bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockAr
 						tabPanel->resetContensWidget(tabWidget);
 						tabWidget->addTab(target,target->windowTitle());
 						from->setDockStatus();
-						from->isTabbed_ = true;
-						from->parentTabWidget_ = tabWidget;
+						from->setTabbedStatus(true,tabPanel);
 						tabWidget->addTab(from,from->windowTitle());
-						target->isTabbed_ = true;
-						target->parentTabWidget_ = tabWidget;
+						target->setTabbedStatus(true,tabPanel);
 						tabPanel->resize(target->size());
 						tabPanel->setDockStatus();
 						parentNode->insertWidget(0,tabPanel);
@@ -303,11 +301,9 @@ bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockAr
 					tabPanel->resetContensWidget(tabWidget);
 					tabWidget->addTab(target,target->windowTitle());
 					from->setDockStatus();
-					from->isTabbed_ = true;
-					from->parentTabWidget_ = tabWidget;
+					from->setTabbedStatus(true,tabPanel);
 					tabWidget->addTab(from,from->windowTitle());
-					target->isTabbed_ = true;
-					target->parentTabWidget_ = tabWidget;
+					target->setTabbedStatus(true,tabPanel);
 					tabPanel->resize(target->size());
 					tabPanel->setDockStatus();
 					parentNode->insertWidget(parentIndex,tabPanel);
@@ -325,7 +321,10 @@ bool QDockManager::dockPanelToPanel( QDockPanel* from,QDockPanel* target, DockAr
 
 		if (target->isTabbed_)
 		{
-			target->parentTabWidget_->addTab(from,from->windowTitle());
+			QDockTabWidget* tabWidget = qobject_cast<QDockTabWidget*>(target->parentTabPanel_->contensWidget_);
+			from->setDockStatus();
+			from->setTabbedStatus(true,target->parentTabPanel_);
+			tabWidget->addTab(from,from->windowTitle());
 
 			return true;
 		}

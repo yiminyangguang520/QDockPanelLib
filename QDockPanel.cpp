@@ -23,7 +23,7 @@ QDockPanel::QDockPanel(QDockManager* manager,QWidget* frame)
 	manager_(manager),contensWidget_(NULL),
 	edgeWidth_(3),titleRectHeight_(20),isDocked_(false),
 	arrows_(this),lastMaskArea_(NoneArea),isTabbed_(false),
-	parentTabWidget_(NULL)
+	parentTabPanel_(NULL)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this,SIGNAL(windowTitleChanged(const QString&)),title_,SLOT(setTitle(const QString&)));
@@ -256,9 +256,9 @@ void QDockPanel::startDrag()
 	title_->startDrag();
 }
 
-void QDockPanel::setTabbedStatus( bool isTabbed,QDockTabWidget* parentTabWidget )
+void QDockPanel::setTabbedStatus( bool isTabbed,QDockPanel* parentTabPanel )
 {
 	isTabbed_ = isTabbed;
-	parentTabWidget_ = parentTabWidget;
+	parentTabPanel_ = parentTabPanel;
 	relayout();
 }

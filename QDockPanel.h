@@ -38,7 +38,7 @@ private:
 	void relayout();
 	void setDockStatus();
 	void setFloatStatus();
-	void setTabbedStatus(bool isTabbed,QDockTabWidget* parentTabWidget);
+	void setTabbedStatus(bool isTabbed,QDockPanel* parentTabPanel);
 signals:
 
 private:
@@ -54,7 +54,7 @@ private:
 	QDockMaskWidget* maskWidget_;
 
 	bool isTabbed_;
-	QDockTabWidget* parentTabWidget_;
+	QDockPanel* parentTabPanel_;
 
 	QDockPanelTitle* title_;
 	QDockPanelEdgeLeft* leftEdge_;
