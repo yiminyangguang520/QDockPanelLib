@@ -39,7 +39,6 @@ private:
 	void setDockStatus();
 	void setFloatStatus();
 	void setTabbedStatus(bool isTabbed,QDockPanel* parentTabPanel);
-signals:
 
 private:
 	int id_;	//panel ID
@@ -55,6 +54,15 @@ private:
 
 	bool isTabbed_;
 	QDockPanel* parentTabPanel_;
+
+	enum PanelType
+	{
+		DockPanel,
+		TabContainer,
+		SplitContainer,
+	};
+
+	PanelType panelType_;
 
 	QDockPanelTitle* title_;
 	QDockPanelEdgeLeft* leftEdge_;

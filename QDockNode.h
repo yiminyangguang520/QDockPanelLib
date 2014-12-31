@@ -10,7 +10,6 @@ class QDockNode : public QSplitter
 public:
 	QDockNode(QWidget *parent);
 	~QDockNode();
-
 private:
 	
 };

@@ -20,9 +20,20 @@ protected:
 private:
     bool isLButtonDown_;
     bool sendDragOut_;
+	int insertPos_;
 
 signals:
     void dragTabOut(int index);
+
+protected:
+	virtual void paintEvent( QPaintEvent * );
+
+	virtual void dragMoveEvent( QDragMoveEvent * );
+
+	virtual void dropEvent( QDropEvent * );
+
+	virtual void dragEnterEvent( QDragEnterEvent * );
+
 };
 
 #endif // QDOCKTABBAR_H

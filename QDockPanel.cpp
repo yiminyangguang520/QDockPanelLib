@@ -23,7 +23,7 @@ QDockPanel::QDockPanel(QDockManager* manager,QWidget* frame)
 	manager_(manager),contensWidget_(NULL),
 	edgeWidth_(3),titleRectHeight_(20),isDocked_(false),
 	arrows_(this),lastMaskArea_(NoneArea),isTabbed_(false),
-	parentTabPanel_(NULL)
+	parentTabPanel_(NULL),panelType_(DockPanel)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this,SIGNAL(windowTitleChanged(const QString&)),title_,SLOT(setTitle(const QString&)));
@@ -231,8 +231,8 @@ void QDockPanel::dropEvent( QDropEvent* e )
 	QDockPanel* panel = qobject_cast<QDockPanel*>(builder.getWidget());
 	if (panel && lastMaskArea_ != NoneArea)
 	{
-		manager_->dockPanelToPanel(panel,this,lastMaskArea_);
 		e->accept();
+		manager_->dockPanelToPanel(panel,this,lastMaskArea_);
 	}
 	else
 	{

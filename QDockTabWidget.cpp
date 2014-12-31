@@ -68,10 +68,8 @@ void QDockTabWidget::tabRemoved( int )
 			panel->move(parentPanel->pos());
 			panel->resize(parentPanel->size());
 
-			parentPanel->setParent(NULL);
 			parentPanel->close();
 			parentPanel->deleteLater();
 		}
-
 	}
 }
