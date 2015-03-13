@@ -5,19 +5,19 @@
 
 class QDockTabWidget : public QTabWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    QDockTabWidget(QWidget* parent);
-    ~QDockTabWidget();
+	QDockTabWidget(QWidget* parent);
+	~QDockTabWidget();
 
 signals:
 	void setBasePanelTitle(const QString &);
-private slots:
-    void onDragTabOut(int index);
+	private slots:
+	void onDragTabOut(int index);
 	void onCurrenChanged(int index);
 protected:
-	virtual void tabRemoved( int );
+	virtual void tabRemoved(int);
 };
 
 #endif // QDOCKTABWIDGET_H

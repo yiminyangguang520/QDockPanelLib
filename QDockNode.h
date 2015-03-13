@@ -11,7 +11,7 @@ public:
 	QDockNode(QWidget *parent);
 	~QDockNode();
 private:
-	
+
 };
 
 #endif // QDOCKNODE_H

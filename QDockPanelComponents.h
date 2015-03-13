@@ -11,18 +11,18 @@ public:
 	QDockPanelTitle(QWidget *parent);
 	~QDockPanelTitle(){}
 
-	virtual void paintEvent( QPaintEvent * );
+	virtual void paintEvent(QPaintEvent *);
 
-public slots:
+	public slots:
 	void setTitle(const QString& title);
 	void startDrag();
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	QString title_;
@@ -41,11 +41,11 @@ public:
 	~QDockPanelEdgeLeft(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -62,11 +62,11 @@ public:
 	~QDockPanelEdgeTop(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -83,11 +83,11 @@ public:
 	~QDockPanelEdgeRight(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -104,11 +104,11 @@ public:
 	~QDockPanelEdgeBottom(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -125,11 +125,11 @@ public:
 	~QDockPanelEdgeLeftTop(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -146,11 +146,11 @@ public:
 	~QDockPanelEdgeRightTop(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -167,11 +167,11 @@ public:
 	~QDockPanelEdgeRightBottom(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;
@@ -188,11 +188,11 @@ public:
 	~QDockPanelEdgeLeftBottom(){}
 
 private:
-	virtual void mousePressEvent( QMouseEvent* e);
+	virtual void mousePressEvent(QMouseEvent* e);
 
-	virtual void mouseReleaseEvent( QMouseEvent*);
+	virtual void mouseReleaseEvent(QMouseEvent*);
 
-	virtual void mouseMoveEvent( QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 private:
 	bool isLBtnPressed_;

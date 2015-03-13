@@ -11,18 +11,18 @@ QDockDataBuilder::~QDockDataBuilder(void)
 
 QByteArray QDockDataBuilder::toByteArray()
 {
-	QByteArray ba(sizeof(data_)+1,'\0');
-	std::memcpy(ba.data(),&data_,sizeof(data_));
+	QByteArray ba(sizeof(data_) + 1, '\0');
+	std::memcpy(ba.data(), &data_, sizeof(data_));
 	return ba;
 }
 
-bool QDockDataBuilder::fromByteArray( const QByteArray& ba )
+bool QDockDataBuilder::fromByteArray(const QByteArray& ba)
 {
-	if (ba.size() != sizeof(data_)+1)
+	if (ba.size() != sizeof(data_) + 1)
 	{
 		return false;
 	}
 
-	std::memcpy(&data_,ba.data(),sizeof(data_));
+	std::memcpy(&data_, ba.data(), sizeof(data_));
 	return true;
 }

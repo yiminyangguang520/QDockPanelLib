@@ -5,34 +5,34 @@
 
 class QDockTabBar : public QTabBar
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    QDockTabBar(QWidget* parent);
-    ~QDockTabBar();
+	QDockTabBar(QWidget* parent);
+	~QDockTabBar();
 
-    // QWidget interface
+	// QWidget interface
 protected:
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
+	void mousePressEvent(QMouseEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
 
 private:
-    bool isLButtonDown_;
-    bool sendDragOut_;
+	bool isLButtonDown_;
+	bool sendDragOut_;
 	int insertPos_;
 
 signals:
-    void dragTabOut(int index);
+	void dragTabOut(int index);
 
 protected:
-	virtual void paintEvent( QPaintEvent * );
+	virtual void paintEvent(QPaintEvent *);
 
-	virtual void dragMoveEvent( QDragMoveEvent * );
+	virtual void dragMoveEvent(QDragMoveEvent *);
 
-	virtual void dropEvent( QDropEvent * );
+	virtual void dropEvent(QDropEvent *);
 
-	virtual void dragEnterEvent( QDragEnterEvent * );
+	virtual void dragEnterEvent(QDragEnterEvent *);
 
 };
 

@@ -18,15 +18,15 @@
 #include <QDragMoveEvent>
 #include <QDropEvent>
 
-QDockPanel::QDockPanel(QDockManager* manager,QWidget* frame)
-    :QWidget(frame,Qt::FramelessWindowHint | Qt::Tool),
-	manager_(manager),contensWidget_(NULL),
-	edgeWidth_(3),titleRectHeight_(20),isDocked_(false),
-	arrows_(this),lastMaskArea_(NoneArea),isTabbed_(false),
-	parentTabPanel_(NULL),panelType_(DockPanel)
+QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
+	:QWidget(frame, Qt::FramelessWindowHint | Qt::Tool),
+	manager_(manager), contensWidget_(NULL),
+	edgeWidth_(3), titleRectHeight_(20), isDocked_(false),
+	arrows_(this), lastMaskArea_(NoneArea), isTabbed_(false),
+	parentTabPanel_(NULL), panelType_(DockPanel)
 {
 	title_ = new QDockPanelTitle(this);
-	connect(this,SIGNAL(windowTitleChanged(const QString&)),title_,SLOT(setTitle(const QString&)));
+	connect(this, SIGNAL(windowTitleChanged(const QString&)), title_, SLOT(setTitle(const QString&)));
 	leftEdge_ = new QDockPanelEdgeLeft(this);
 	leftTopEdge_ = new QDockPanelEdgeLeftTop(this);
 	topEdge_ = new QDockPanelEdgeTop(this);
@@ -41,49 +41,49 @@ QDockPanel::QDockPanel(QDockManager* manager,QWidget* frame)
 
 	setAcceptDrops(true);
 
-	setMinimumSize(50,50);
+	setMinimumSize(50, 50);
 }
 
 
 void QDockPanel::paintEvent(QPaintEvent*)
 {
-    QPainter p(this);
+	QPainter p(this);
 }
 
 void QDockPanel::resizeEvent(QResizeEvent*)
 {
-    relayout();
+	relayout();
 }
 
 void QDockPanel::resetContensWidgetPosAndSize()
 {
-    if (!contensWidget_)
-    {
-        return;
-    }
+	if (!contensWidget_)
+	{
+		return;
+	}
 
-    if (contensWidget_->parentWidget() != this)
-    {
-        contensWidget_->setParent(this);
-    }
+	if (contensWidget_->parentWidget() != this)
+	{
+		contensWidget_->setParent(this);
+	}
 
 	if (isDocked_)
 	{
 		if (isTabbed_)
 		{
-			contensWidget_->move(0,0);
-			contensWidget_->resize(width(),height());
+			contensWidget_->move(0, 0);
+			contensWidget_->resize(width(), height());
 		}
 		else
 		{
-			contensWidget_->move(0,edgeWidth_ + titleRectHeight_);
-			contensWidget_->resize(width(),height() - edgeWidth_ - titleRectHeight_);
+			contensWidget_->move(0, edgeWidth_ + titleRectHeight_);
+			contensWidget_->resize(width(), height() - edgeWidth_ - titleRectHeight_);
 		}
 	}
 	else
 	{
-		contensWidget_->move(edgeWidth_,edgeWidth_ * 2 + titleRectHeight_);
-		contensWidget_->resize(width() - edgeWidth_ * 2,height() - edgeWidth_ * 3 - titleRectHeight_);
+		contensWidget_->move(edgeWidth_, edgeWidth_ * 2 + titleRectHeight_);
+		contensWidget_->resize(width() - edgeWidth_ * 2, height() - edgeWidth_ * 3 - titleRectHeight_);
 	}
 }
 
@@ -98,8 +98,8 @@ void QDockPanel::relayout()
 		}
 		else
 		{
-			title_->move(0,0);
-			title_->resize(width(),titleRectHeight_);
+			title_->move(0, 0);
+			title_->resize(width(), titleRectHeight_);
 			title_->show();
 		}
 
@@ -114,40 +114,40 @@ void QDockPanel::relayout()
 	}
 	else
 	{
-		title_->move(edgeWidth_,edgeWidth_);
-		title_->resize(width()-edgeWidth_*2,titleRectHeight_);
+		title_->move(edgeWidth_, edgeWidth_);
+		title_->resize(width() - edgeWidth_ * 2, titleRectHeight_);
 		title_->show();
 
-		leftEdge_->move(0,edgeWidth_);
-		leftEdge_->resize(edgeWidth_,height()-edgeWidth_*2);
+		leftEdge_->move(0, edgeWidth_);
+		leftEdge_->resize(edgeWidth_, height() - edgeWidth_ * 2);
 		leftEdge_->show();
 
-		leftTopEdge_->move(0,0);
-		leftTopEdge_->resize(edgeWidth_,edgeWidth_);
+		leftTopEdge_->move(0, 0);
+		leftTopEdge_->resize(edgeWidth_, edgeWidth_);
 		leftTopEdge_->show();
 
-		topEdge_->move(edgeWidth_,0);
-		topEdge_->resize(width()-edgeWidth_*2,edgeWidth_);
+		topEdge_->move(edgeWidth_, 0);
+		topEdge_->resize(width() - edgeWidth_ * 2, edgeWidth_);
 		topEdge_->show();
 
-		rightTopEdge_->move(width()-edgeWidth_,0);
-		rightTopEdge_->resize(edgeWidth_,edgeWidth_);
+		rightTopEdge_->move(width() - edgeWidth_, 0);
+		rightTopEdge_->resize(edgeWidth_, edgeWidth_);
 		rightTopEdge_->show();
 
-		rightEdge_->move(width()-edgeWidth_,edgeWidth_);
-		rightEdge_->resize(edgeWidth_,height()-edgeWidth_*2);
+		rightEdge_->move(width() - edgeWidth_, edgeWidth_);
+		rightEdge_->resize(edgeWidth_, height() - edgeWidth_ * 2);
 		rightEdge_->show();
 
-		rightBottomEdge_->move(width()-edgeWidth_,height()-edgeWidth_);
-		rightBottomEdge_->resize(edgeWidth_,edgeWidth_);
+		rightBottomEdge_->move(width() - edgeWidth_, height() - edgeWidth_);
+		rightBottomEdge_->resize(edgeWidth_, edgeWidth_);
 		rightBottomEdge_->show();
 
-		bottomEdge_->move(edgeWidth_,height()-edgeWidth_);
-		bottomEdge_->resize(width()-edgeWidth_*2,edgeWidth_);
+		bottomEdge_->move(edgeWidth_, height() - edgeWidth_);
+		bottomEdge_->resize(width() - edgeWidth_ * 2, edgeWidth_);
 		bottomEdge_->show();
 
-		leftBottomEdge_->move(0,height()-edgeWidth_);
-		leftBottomEdge_->resize(edgeWidth_,edgeWidth_);
+		leftBottomEdge_->move(0, height() - edgeWidth_);
+		leftBottomEdge_->resize(edgeWidth_, edgeWidth_);
 		leftBottomEdge_->show();
 	}
 
@@ -171,7 +171,7 @@ void QDockPanel::setFloatStatus()
 	isTabbed_ = false;
 }
 
-bool QDockPanel::dockTo( QWidget* target, DockArea area )
+bool QDockPanel::dockTo(QWidget* target, DockArea area)
 {
 	return false;
 }
@@ -181,7 +181,7 @@ void QDockPanel::undock()
 	manager_->undockPanel(this);
 }
 
-void QDockPanel::dragEnterEvent( QDragEnterEvent* e )
+void QDockPanel::dragEnterEvent(QDragEnterEvent* e)
 {
 	manager_->onDragEnterPanel();
 	const QMimeData* mimeData = e->mimeData();
@@ -196,7 +196,7 @@ void QDockPanel::dragEnterEvent( QDragEnterEvent* e )
 	}
 }
 
-void QDockPanel::dragMoveEvent( QDragMoveEvent* e )
+void QDockPanel::dragMoveEvent(QDragMoveEvent* e)
 {
 	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
 	if (area != lastMaskArea_)
@@ -207,7 +207,7 @@ void QDockPanel::dragMoveEvent( QDragMoveEvent* e )
 	e->accept();
 }
 
-void QDockPanel::dragLeaveEvent( QDragLeaveEvent* e )
+void QDockPanel::dragLeaveEvent(QDragLeaveEvent* e)
 {
 	manager_->onDragLeavePanel();
 	arrows_.show(NoneArea);
@@ -216,7 +216,7 @@ void QDockPanel::dragLeaveEvent( QDragLeaveEvent* e )
 	e->accept();
 }
 
-void QDockPanel::dropEvent( QDropEvent* e )
+void QDockPanel::dropEvent(QDropEvent* e)
 {
 	const QMimeData* mimeData = e->mimeData();
 	if (!mimeData->hasFormat("dockpanellib/dockdata"))
@@ -232,7 +232,7 @@ void QDockPanel::dropEvent( QDropEvent* e )
 	if (panel && lastMaskArea_ != NoneArea)
 	{
 		e->accept();
-		manager_->dockPanelToPanel(panel,this,lastMaskArea_);
+		manager_->dockPanelToPanel(panel, this, lastMaskArea_);
 	}
 	else
 	{
@@ -256,7 +256,7 @@ void QDockPanel::startDrag()
 	title_->startDrag();
 }
 
-void QDockPanel::setTabbedStatus( bool isTabbed,QDockPanel* parentTabPanel )
+void QDockPanel::setTabbedStatus(bool isTabbed, QDockPanel* parentTabPanel)
 {
 	isTabbed_ = isTabbed;
 	parentTabPanel_ = parentTabPanel;

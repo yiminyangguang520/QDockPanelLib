@@ -9,8 +9,8 @@
 #include "QDockDataBuilder.h"
 #include "QDockManager.h"
 
-QDockFrame::QDockFrame(QDockManager* manager,QWidget *parent)
-    : QWidget(parent),arrows_(this),manager_(manager),lastMaskArea_(NoneArea)
+QDockFrame::QDockFrame(QDockManager* manager, QWidget *parent)
+	: QWidget(parent), arrows_(this), manager_(manager), lastMaskArea_(NoneArea)
 {
 	rootNode_ = new QDockNode(this);
 	maskWidget_ = new QDockMaskWidget(this);
@@ -38,7 +38,7 @@ void QDockFrame::showArrow()
 
 
 
-void QDockFrame::dragEnterEvent( QDragEnterEvent* e )
+void QDockFrame::dragEnterEvent(QDragEnterEvent* e)
 {
 	const QMimeData* mimeData = e->mimeData();
 	if (mimeData && mimeData->hasFormat("dockpanellib/dockdata"))
@@ -52,7 +52,7 @@ void QDockFrame::dragEnterEvent( QDragEnterEvent* e )
 	}
 }
 
-void QDockFrame::dragMoveEvent( QDragMoveEvent* e )
+void QDockFrame::dragMoveEvent(QDragMoveEvent* e)
 {
 	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
 	if (area != lastMaskArea_)
@@ -63,7 +63,7 @@ void QDockFrame::dragMoveEvent( QDragMoveEvent* e )
 	e->accept();
 }
 
-void QDockFrame::dragLeaveEvent( QDragLeaveEvent* e )
+void QDockFrame::dragLeaveEvent(QDragLeaveEvent* e)
 {
 	if (!rect().contains(mapFromGlobal(QCursor::pos())))
 	{
@@ -74,7 +74,7 @@ void QDockFrame::dragLeaveEvent( QDragLeaveEvent* e )
 	e->accept();
 }
 
-void QDockFrame::dropEvent( QDropEvent* e )
+void QDockFrame::dropEvent(QDropEvent* e)
 {
 	const QMimeData* mimeData = e->mimeData();
 	if (!mimeData->hasFormat("dockpanellib/dockdata"))
@@ -89,7 +89,7 @@ void QDockFrame::dropEvent( QDropEvent* e )
 	QDockPanel* panel = qobject_cast<QDockPanel*>(builder.getWidget());
 	if (panel && lastMaskArea_ != NoneArea)
 	{
-		manager_->dockPanelToFrame(panel,lastMaskArea_);
+		manager_->dockPanelToFrame(panel, lastMaskArea_);
 		e->accept();
 	}
 	else
@@ -102,7 +102,7 @@ void QDockFrame::dropEvent( QDropEvent* e )
 	maskWidget_->showOnDockArea(NoneArea);
 }
 
-void QDockFrame::resizeEvent( QResizeEvent * )
+void QDockFrame::resizeEvent(QResizeEvent *)
 {
 	relayout();
 }

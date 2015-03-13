@@ -14,7 +14,7 @@ public:
 
 	void showOnDockArea(DockArea area);
 private:
-	
+
 };
 
 #endif // QDOCKMASKWIDGET_H

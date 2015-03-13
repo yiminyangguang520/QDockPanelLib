@@ -5,8 +5,8 @@
 #include <QCursor>
 
 QDockTabBar::QDockTabBar(QWidget *parent)
-    :QTabBar(parent),isLButtonDown_(false),
-	sendDragOut_(false),insertPos_(-1)
+	:QTabBar(parent), isLButtonDown_(false),
+	sendDragOut_(false), insertPos_(-1)
 {
 	setAcceptDrops(true);
 }
@@ -20,21 +20,21 @@ QDockTabBar::~QDockTabBar()
 
 void QDockTabBar::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton)
-    {
-        isLButtonDown_ = true;
-        sendDragOut_ = false;
-    }
-    QTabBar::mousePressEvent(e);
+	if (e->button() == Qt::LeftButton)
+	{
+		isLButtonDown_ = true;
+		sendDragOut_ = false;
+	}
+	QTabBar::mousePressEvent(e);
 }
 
 void QDockTabBar::mouseReleaseEvent(QMouseEvent *e)
 {
-    isLButtonDown_ = false;
-    QTabBar::mouseReleaseEvent(e);
+	isLButtonDown_ = false;
+	QTabBar::mouseReleaseEvent(e);
 	if (insertPos_ >= 0)
 	{
-		moveTab(currentIndex(),insertPos_);
+		moveTab(currentIndex(), insertPos_);
 	}
 
 	insertPos_ = -1;
@@ -64,31 +64,31 @@ void QDockTabBar::mouseMoveEvent(QMouseEvent *e)
 	repaint();
 }
 
-void QDockTabBar::paintEvent( QPaintEvent * e)
+void QDockTabBar::paintEvent(QPaintEvent * e)
 {
 	QTabBar::paintEvent(e);
 
 	QPainter p(this);
 	QRect rc = tabRect(insertPos_);
-	rc.moveCenter(QPoint(rc.left(),rc.center().y()));
+	rc.moveCenter(QPoint(rc.left(), rc.center().y()));
 
-	p.setBrush(QBrush(QColor(0,0,255,100)));
+	p.setBrush(QBrush(QColor(0, 0, 255, 100)));
 	p.setPen(QPen(Qt::blue));
 	p.drawRect(rc);
 }
 
-void QDockTabBar::dragEnterEvent( QDragEnterEvent * )
+void QDockTabBar::dragEnterEvent(QDragEnterEvent *)
 {
 
 }
 
-void QDockTabBar::dragMoveEvent( QDragMoveEvent * )
+void QDockTabBar::dragMoveEvent(QDragMoveEvent *)
 {
 	insertPos_ = tabAt(mapFromGlobal(QCursor::pos()));
 	repaint();
 }
 
-void QDockTabBar::dropEvent( QDropEvent * )
+void QDockTabBar::dropEvent(QDropEvent *)
 {
-	
+
 }

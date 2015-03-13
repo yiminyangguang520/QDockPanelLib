@@ -7,17 +7,17 @@
 #include <QList>
 
 QDockTabWidget::QDockTabWidget(QWidget *parent)
-    :QTabWidget(parent)
+	:QTabWidget(parent)
 {
-    QDockTabBar* bar = new QDockTabBar(this);
-    bar->setMovable(false);
+	QDockTabBar* bar = new QDockTabBar(this);
+	bar->setMovable(false);
 
-    connect(bar,SIGNAL(dragTabOut(int)),this,SLOT(onDragTabOut(int)),Qt::QueuedConnection);
-    setTabBar(bar);
+	connect(bar, SIGNAL(dragTabOut(int)), this, SLOT(onDragTabOut(int)), Qt::QueuedConnection);
+	setTabBar(bar);
 
 	setTabPosition(South);
 
-	connect(this,SIGNAL(currentChanged(int)),this,SLOT(onCurrenChanged(int)));
+	connect(this, SIGNAL(currentChanged(int)), this, SLOT(onCurrenChanged(int)));
 }
 
 QDockTabWidget::~QDockTabWidget()
@@ -28,7 +28,7 @@ QDockTabWidget::~QDockTabWidget()
 void QDockTabWidget::onDragTabOut(int index)
 {
 	QDockPanel* currentPanel = qobject_cast<QDockPanel*>(widget(index));
- 	currentPanel->undock();
+	currentPanel->undock();
 	currentPanel->show();
 	currentPanel->startDrag();
 }
@@ -43,7 +43,7 @@ void QDockTabWidget::onCurrenChanged(int)
 	emit setBasePanelTitle(cur->windowTitle());
 }
 
-void QDockTabWidget::tabRemoved( int )
+void QDockTabWidget::tabRemoved(int)
 {
 	if (count() == 1)
 	{
@@ -57,8 +57,8 @@ void QDockTabWidget::tabRemoved( int )
 			parentPanel->setParent(NULL);
 			parentPanel->close();
 			parentPanel->deleteLater();
-			panel->setTabbedStatus(false,NULL);
-			parentNode->insertWidget(thisIndex,panel);
+			panel->setTabbedStatus(false, NULL);
+			parentNode->insertWidget(thisIndex, panel);
 			parentNode->setSizes(sizes);
 		}
 		else

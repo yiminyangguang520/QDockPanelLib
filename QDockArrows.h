@@ -11,26 +11,26 @@ class QArrowWidget;
 
 class QDockArrows : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit QDockArrows(QWidget *parent = 0);
+	explicit QDockArrows(QWidget *parent = 0);
 
-    void show(int dockArea);
+	void show(int dockArea);
 
 	DockArea getDockAreaByPos(QPoint pos);
 private:
-    QArrowWidget* leftWid;
-    QArrowWidget* topWid;
-    QArrowWidget* rightWid;
-    QArrowWidget* bottomWid;
-    QArrowWidget* centerWid;
-    QArrowWidget* centerLeftWid;
-    QArrowWidget* centerRightWid;
-    QArrowWidget* centerTopWid;
-    QArrowWidget* centerBottomWid;
+	QArrowWidget* leftWid;
+	QArrowWidget* topWid;
+	QArrowWidget* rightWid;
+	QArrowWidget* bottomWid;
+	QArrowWidget* centerWid;
+	QArrowWidget* centerLeftWid;
+	QArrowWidget* centerRightWid;
+	QArrowWidget* centerTopWid;
+	QArrowWidget* centerBottomWid;
 
-    QWidget* parentWid;
-public slots:
+	QWidget* parentWid;
+	public slots:
 
 };
 

@@ -13,30 +13,30 @@ class QDockManager;
 
 class QDockFrame : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit QDockFrame(QDockManager* manager, QWidget *parent);
-    virtual ~QDockFrame();
-    void showArrow();
+	explicit QDockFrame(QDockManager* manager, QWidget *parent);
+	virtual ~QDockFrame();
+	void showArrow();
 
 	void relayout();
 protected:
-	virtual void dragEnterEvent( QDragEnterEvent * );
+	virtual void dragEnterEvent(QDragEnterEvent *);
 
-	virtual void dragMoveEvent( QDragMoveEvent * );
+	virtual void dragMoveEvent(QDragMoveEvent *);
 
-	virtual void dragLeaveEvent( QDragLeaveEvent * );
+	virtual void dragLeaveEvent(QDragLeaveEvent *);
 
-	virtual void dropEvent( QDropEvent * );
+	virtual void dropEvent(QDropEvent *);
 
-	virtual void resizeEvent( QResizeEvent * );
+	virtual void resizeEvent(QResizeEvent *);
 
 private:
-    QDockArrows arrows_;
+	QDockArrows arrows_;
 	QDockNode* rootNode_;
 	QDockMaskWidget* maskWidget_;
-	std::map<int,QDockPanel*> dockPanels_;
+	std::map<int, QDockPanel*> dockPanels_;
 	QDockManager* manager_;
 
 	DockArea lastMaskArea_;
