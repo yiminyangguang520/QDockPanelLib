@@ -47,6 +47,27 @@ QDockPanel* QDockManager::getDockPanelByID(int id)
 	return it->second;
 }
 
+bool QDockManager::dockPanelTo(QDockPanel* panel, QWidget* target, DockArea area)
+{
+	assert(panel != target);
+	panel->dockTarget_ = target;
+	panel->area_ = area;
+	panel->floatPos_ = panel->pos();
+
+	QDockFrame* dockFrmae = qobject_cast<QDockFrame*>(target);
+	if (dockFrmae)
+	{
+		return dockPanelToFrame(panel, area);
+	}
+	QDockPanel* targetPanel = qobject_cast<QDockPanel*>(target);
+	if (targetPanel)
+	{
+		return dockPanelToPanel(panel, targetPanel, area);
+	}
+
+	return false;
+}
+
 bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 {
 	if (panel->panelType_ == QDockPanel::SplitContainer)
@@ -318,7 +339,8 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 	case CenterArea:
 		assert(dockFrmae_->rootNode_->count() == 0);
 		panel->setDockStatus();
-		panel->setParent(dockFrmae_->rootNode_);
+		//panel->setParent(dockFrmae_->rootNode_);
+		dockFrmae_->rootNode_->addWidget(panel);
 		break;
 	default:
 		return false;
@@ -329,7 +351,7 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 
 bool QDockManager::dockPanelToPanel(QDockPanel* from, QDockPanel* target, DockArea area)
 {
-	if (target->isDocked())
+	if (target->dockStatus() == Docked)
 	{
 		return dockPanelToDockedPanel(from, target, area);
 	}
@@ -357,10 +379,14 @@ bool QDockManager::isRootNode(QDockNode* node)
 void QDockManager::undockPanel(QDockPanel* panel)
 {
 	QDockNode* parentNode = qobject_cast<QDockNode*>(panel->parentWidget());
+
+	panel->setParent(dockFrmae_);
+	panel->setFloatStatus();
+	panel->move(panel->floatPos_);
+	panel->show();
+
 	if (parentNode)
 	{
-		panel->setParent(dockFrmae_);
-		panel->setFloatStatus();
 		if (isRootNode(parentNode))
 		{
 			QDockNode* otherChildNode = qobject_cast<QDockNode*>(parentNode->widget(0));
@@ -419,9 +445,6 @@ void QDockManager::undockPanel(QDockPanel* panel)
 		}
 		return;
 	}
-
-	panel->setParent(dockFrmae_);
-	panel->setFloatStatus();
 
 	return;
 }

@@ -1,6 +1,13 @@
 #ifndef QDOCKCOMMON_H
 #define QDOCKCOMMON_H
 
+enum DockStatus
+{
+	AutoHide,
+	Docked,
+	Floating,
+};
+
 enum DockArea
 {
 	NoneArea = 0,

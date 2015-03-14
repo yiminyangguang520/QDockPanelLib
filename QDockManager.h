@@ -21,7 +21,8 @@ public:
 	QDockPanel* addPanel(int id, const QString& title, QPoint pos, QSize size, QWidget* contensWidget = NULL);
 	QDockPanel* getDockPanelByID(int id);
 
-	public slots:
+public slots:
+	bool dockPanelTo(QDockPanel* panel, QWidget* target, DockArea area);
 	bool dockPanelToFrame(QDockPanel* panel, DockArea area);
 	bool dockPanelToPanel(QDockPanel* from, QDockPanel* target, DockArea area);
 

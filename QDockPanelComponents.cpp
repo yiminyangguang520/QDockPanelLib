@@ -7,10 +7,13 @@
 #include <QApplication>
 #include <QDrag>
 #include <QMimeData>
+#include <QDebug>
 
 QDockPanelTitle::QDockPanelTitle(QWidget *parent)
-	:QWidget(parent), isLBtnPressed_(false)
+	:QWidget(parent), isLBtnPressed_(false),
+	mouseInCloseRect_(false), mouseInPinRect_(false)
 {
+	setMouseTracking(true);
 	setPalette(QPalette(Qt::lightGray));
 	setAutoFillBackground(true);
 }
@@ -19,6 +22,31 @@ void QDockPanelTitle::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 	p.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter, title_);
+
+	if (mouseInCloseRect_)
+	{
+		p.setPen(QPen(Qt::red));
+		p.setBrush(QBrush(Qt::darkBlue));
+	}
+	else
+	{
+		p.setPen(QPen(Qt::blue));
+		p.setBrush(QBrush(Qt::blue));
+	}
+	p.drawRect(closeButtonRect_);
+	//TODO:»­ÉÏÍ¼¶¤Í¼°¸
+	if (mouseInPinRect_)
+	{
+		p.setPen(QPen(Qt::red));
+		p.setBrush(QBrush(Qt::darkBlue));
+	}
+	else
+	{
+		p.setPen(QPen(Qt::blue));
+		p.setBrush(QBrush(Qt::blue));
+	}
+	p.drawRect(pinButtonRect_);
+	//TODO:»­ÉÏ¹Ø±Õ·ûºÅ
 }
 
 void QDockPanelTitle::setTitle(const QString& title)
@@ -29,6 +57,10 @@ void QDockPanelTitle::setTitle(const QString& title)
 
 void QDockPanelTitle::mousePressEvent(QMouseEvent* e)
 {
+	if (closeButtonRect_.contains(e->pos()) || pinButtonRect_.contains(e->pos()))
+	{
+		return;
+	}
 	if (e->button() == Qt::LeftButton)
 	{
 		isLBtnPressed_ = true;
@@ -37,31 +69,64 @@ void QDockPanelTitle::mousePressEvent(QMouseEvent* e)
 	}
 }
 
-void QDockPanelTitle::mouseReleaseEvent(QMouseEvent*)
+void QDockPanelTitle::mouseReleaseEvent(QMouseEvent* e)
 {
+	if (closeButtonRect_.contains(e->pos()))
+	{
+		parentWidget()->close();
+	}
+
+	if (pinButtonRect_.contains(e->pos()))
+	{
+		emit pinButtonClicked();
+	}
+
+
 	isLBtnPressed_ = false;
 }
 
 void QDockPanelTitle::mouseMoveEvent(QMouseEvent* e)
 {
+	bool tmp1 = mouseInCloseRect_;
+	mouseInCloseRect_ = closeButtonRect_.contains(e->pos());
+	bool tmp2 = mouseInPinRect_;
+	mouseInPinRect_ = pinButtonRect_.contains(e->pos());
+	if (tmp1 != mouseInCloseRect_ || tmp2 != mouseInPinRect_)
+	{
+		repaint();
+	}
+
 	if (!isLBtnPressed_)
 	{
 		return;
 	}
 
 	QDockPanel* panel = qobject_cast<QDockPanel*>(parentWidget());
-	if (panel && panel->isDocked_)
+	if (panel && panel->dockStatus_ == Docked)
 	{
 		panel->undock();
 	}
 
 	if (QApplication::keyboardModifiers() != Qt::ControlModifier)
 	{
+		isLBtnPressed_ = false;
 		startDrag();
 		return;
 	}
 
 	parentWidget()->move(parentOldPos_.x() + e->globalX() - pressedPos_.x(), parentOldPos_.y() + e->globalY() - pressedPos_.y());
+}
+
+void QDockPanelTitle::resizeEvent(QResizeEvent *)
+{
+	int w = height() - 4;
+	closeButtonRect_ = QRect(width() - 2 - w, 2, w, w);
+	pinButtonRect_ = QRect(width() - (w + 2) * 2, 2, w, w);
+}
+
+void QDockPanelTitle::mouseDoubleClickEvent(QMouseEvent *)
+{
+	emit doubleClicked();
 }
 
 void QDockPanelTitle::startDrag()

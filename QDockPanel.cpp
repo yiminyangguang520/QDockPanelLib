@@ -17,16 +17,39 @@
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QDebug>
+
 
 QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 	:QWidget(frame, Qt::FramelessWindowHint | Qt::Tool),
 	manager_(manager), contensWidget_(NULL),
-	edgeWidth_(3), titleRectHeight_(20), isDocked_(false),
+	edgeWidth_(3), titleRectHeight_(20), dockStatus_(Floating),
 	arrows_(this), lastMaskArea_(NoneArea), isTabbed_(false),
-	parentTabPanel_(NULL), panelType_(DockPanel)
+	parentTabPanel_(NULL), panelType_(DockPanel),
+	dockTarget_(NULL), area_(NoneArea)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this, SIGNAL(windowTitleChanged(const QString&)), title_, SLOT(setTitle(const QString&)));
+	connect(title_, &QDockPanelTitle::pinButtonClicked, [this]
+	{
+		assert(dockStatus_ == Docked || dockStatus_ == AutoHide);
+		setAutoHide(dockStatus_ == Docked);
+	});
+	connect(title_, &QDockPanelTitle::doubleClicked, [this]
+	{
+// 		if (!dockTarget_)
+// 		{
+// 			return;
+// 		}
+		if (dockStatus() == Docked)
+		{
+			undock();
+		}
+		else if (dockStatus() == Floating)
+		{
+			manager_->dockPanelTo(this, dockTarget_, area_);
+		}
+	});
 	leftEdge_ = new QDockPanelEdgeLeft(this);
 	leftTopEdge_ = new QDockPanelEdgeLeftTop(this);
 	topEdge_ = new QDockPanelEdgeTop(this);
@@ -67,7 +90,7 @@ void QDockPanel::resetContensWidgetPosAndSize()
 		contensWidget_->setParent(this);
 	}
 
-	if (isDocked_)
+	if (dockStatus_ == Docked)
 	{
 		if (isTabbed_)
 		{
@@ -90,7 +113,7 @@ void QDockPanel::resetContensWidgetPosAndSize()
 
 void QDockPanel::relayout()
 {
-	if (isDocked_)
+	if (dockStatus_ == Docked)
 	{
 		if (isTabbed_)
 		{
@@ -159,7 +182,7 @@ void QDockPanel::setDockStatus()
 	floatSize_ = size();
 	setWindowFlags(Qt::SubWindow);
 	relayout();
-	isDocked_ = true;
+	dockStatus_ = Docked;
 }
 
 void QDockPanel::setFloatStatus()
@@ -167,13 +190,13 @@ void QDockPanel::setFloatStatus()
 	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
 	resize(floatSize_);
 	relayout();
-	isDocked_ = false;
+	dockStatus_ = Floating;
 	isTabbed_ = false;
 }
 
 bool QDockPanel::dockTo(QWidget* target, DockArea area)
 {
-	return false;
+	return manager_->dockPanelTo(this, target, area);
 }
 
 void QDockPanel::undock()
@@ -232,7 +255,7 @@ void QDockPanel::dropEvent(QDropEvent* e)
 	if (panel && lastMaskArea_ != NoneArea)
 	{
 		e->accept();
-		manager_->dockPanelToPanel(panel, this, lastMaskArea_);
+		manager_->dockPanelTo(panel, this, lastMaskArea_);
 	}
 	else
 	{
@@ -254,6 +277,13 @@ void QDockPanel::showArrow()
 void QDockPanel::startDrag()
 {
 	title_->startDrag();
+}
+
+void QDockPanel::setAutoHide(bool hide)
+{
+	//TODO:complete
+
+	dockStatus_ = hide ? AutoHide : Docked;
 }
 
 void QDockPanel::setTabbedStatus(bool isTabbed, QDockPanel* parentTabPanel)

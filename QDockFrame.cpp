@@ -89,8 +89,8 @@ void QDockFrame::dropEvent(QDropEvent* e)
 	QDockPanel* panel = qobject_cast<QDockPanel*>(builder.getWidget());
 	if (panel && lastMaskArea_ != NoneArea)
 	{
-		manager_->dockPanelToFrame(panel, lastMaskArea_);
 		e->accept();
+		manager_->dockPanelTo(panel, this, lastMaskArea_);
 	}
 	else
 	{

@@ -24,12 +24,25 @@ private:
 
 	virtual void mouseMoveEvent(QMouseEvent* e);
 
+	virtual void resizeEvent(QResizeEvent *);
+
+	virtual void mouseDoubleClickEvent(QMouseEvent *);
+signals:
+	void pinButtonClicked();
+	void doubleClicked();
+
+
 private:
 	QString title_;
 
 	bool isLBtnPressed_;
 	QPoint pressedPos_;
 	QPoint parentOldPos_;
+
+	bool mouseInPinRect_;
+	QRect pinButtonRect_;
+	bool mouseInCloseRect_;
+	QRect closeButtonRect_;
 };
 
 class QDockPanelEdgeLeft : public QWidget

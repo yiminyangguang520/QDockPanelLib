@@ -29,10 +29,11 @@ public:
 	void setId(int id){ id_ = id; }
 	int id(){ return id_; }
 
-	bool isDocked(){ return isDocked_; }
+	DockStatus dockStatus(){ return dockStatus_; }
 	bool dockTo(QWidget* target, DockArea area);
 	void undock();
 	void startDrag();
+	void setAutoHide(bool hide);
 private:
 	void resizeWidget(int curX, int curY);
 	void relayout();
@@ -45,7 +46,6 @@ private:
 	int titleRectHeight_;    // panel窗口的标题栏的高度.
 	QWidget* contensWidget_; // panel窗口内的widget.
 	int edgeWidth_;         // 边框的宽度.
-	bool isDocked_;
 	QSize floatSize_;
 	QDockManager* manager_;
 	QDockArrows arrows_;
@@ -54,6 +54,12 @@ private:
 
 	bool isTabbed_;
 	QDockPanel* parentTabPanel_;
+
+	DockStatus dockStatus_;
+	QWidget* dockTarget_;
+	DockArea area_;
+	QPoint floatPos_;
+
 
 	enum PanelType
 	{
