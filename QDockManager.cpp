@@ -98,7 +98,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 				dockFrmae_->rootNode_->insertWidget(0, fromNode);
 				dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-				dockFrmae_->relayout();
 				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
@@ -127,7 +126,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 				dockFrmae_->rootNode_->insertWidget(0, fromNode);
 				dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-				dockFrmae_->relayout();
 				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
@@ -156,7 +154,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 				dockFrmae_->rootNode_->insertWidget(0, tmpNode);
 				dockFrmae_->rootNode_->insertWidget(1, fromNode);
-				dockFrmae_->relayout();
 				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
@@ -185,7 +182,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 				dockFrmae_->rootNode_->insertWidget(0, tmpNode);
 				dockFrmae_->rootNode_->insertWidget(1, fromNode);
-				dockFrmae_->relayout();
 				dockFrmae_->rootNode_->setSizes(sizes);
 			}
 			else
@@ -200,7 +196,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			dockFrmae_->rootNode_ = fromNode;
 			fromNode->show();
 			fromNode->setParent(dockFrmae_);
-			dockFrmae_->relayout();
 			break;
 		default:
 			return false;
@@ -234,7 +229,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 			dockFrmae_->rootNode_->insertWidget(0, panel);
 			dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-			dockFrmae_->relayout();
 			dockFrmae_->rootNode_->setSizes(sizes);
 		}
 		else
@@ -265,7 +259,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 			dockFrmae_->rootNode_->insertWidget(0, panel);
 			dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-			dockFrmae_->relayout();
 			dockFrmae_->rootNode_->setSizes(sizes);
 		}
 		else
@@ -296,7 +289,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
 			dockFrmae_->rootNode_->insertWidget(0, tmpNode);
 			dockFrmae_->rootNode_->insertWidget(1, panel);
-			dockFrmae_->relayout();
 			dockFrmae_->rootNode_->setSizes(sizes);
 		}
 		else
@@ -327,7 +319,6 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
 			dockFrmae_->rootNode_->insertWidget(0, tmpNode);
 			dockFrmae_->rootNode_->insertWidget(1, panel);
-			dockFrmae_->relayout();
 			dockFrmae_->rootNode_->setSizes(sizes);
 		}
 		else

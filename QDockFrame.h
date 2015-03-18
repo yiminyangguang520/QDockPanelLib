@@ -10,6 +10,8 @@ class QDockPanel;
 class QDockNode;
 class QDockMaskWidget;
 class QDockManager;
+class QToolBar;
+class QAction;
 
 class QDockFrame : public QWidget
 {
@@ -20,7 +22,6 @@ public:
 	virtual ~QDockFrame();
 	void showArrow();
 
-	void relayout();
 protected:
 	virtual void dragEnterEvent(QDragEnterEvent *);
 
@@ -29,8 +30,6 @@ protected:
 	virtual void dragLeaveEvent(QDragLeaveEvent *);
 
 	virtual void dropEvent(QDropEvent *);
-
-	virtual void resizeEvent(QResizeEvent *);
 
 private:
 	QDockArrows arrows_;
@@ -41,11 +40,19 @@ private:
 
 	DockArea lastMaskArea_;
 
+	QToolBar* leftBar_;
+	QToolBar* rightBar_;
+	QToolBar* topBar_;
+	QToolBar* bottomBar_;
 
 private:
 	void onDragEnterPanel();
 	void onDragLeavePanel();
 	void onEndDragAtPanel();
+
+private:
+	QAction* addSideButton(const QString& title,DockArea area);
+	bool delSideButton(QAction* action);
 	friend QDockManager;
 };
 

@@ -8,13 +8,44 @@
 #include "QDockPanel.h"
 #include "QDockDataBuilder.h"
 #include "QDockManager.h"
+#include <QLayout>
+#include "QDockSideButton.h"
+#include <QToolBar>
 
 QDockFrame::QDockFrame(QDockManager* manager, QWidget *parent)
 	: QWidget(parent), arrows_(this), manager_(manager), lastMaskArea_(NoneArea)
 {
-	rootNode_ = new QDockNode(this);
 	maskWidget_ = new QDockMaskWidget(this);
 	maskWidget_->hide();
+
+	QVBoxLayout* vlay = new QVBoxLayout(this);
+	QHBoxLayout* hlay = new QHBoxLayout;
+	
+	rootNode_ = new QDockNode(this);
+
+	leftBar_ = new QToolBar(this);
+	leftBar_->setOrientation(Qt::Vertical);
+	rightBar_ = new QToolBar(this);
+	rightBar_->setOrientation(Qt::Vertical);
+	topBar_ = new QToolBar(this);
+	topBar_->setOrientation(Qt::Horizontal);
+	bottomBar_ = new QToolBar(this);
+	bottomBar_->setOrientation(Qt::Horizontal);
+
+	vlay->addWidget(topBar_);
+	vlay->addLayout(hlay);
+	vlay->addWidget(bottomBar_);
+	hlay->addWidget(leftBar_);
+	hlay->addWidget(rootNode_);
+	hlay->addWidget(rightBar_);
+
+	vlay->setMargin(0);
+	hlay->setMargin(0);
+
+	leftBar_->hide();
+	rightBar_->hide();
+	topBar_->hide();
+	bottomBar_->hide();
 
 	setAcceptDrops(true);
 }
@@ -102,20 +133,6 @@ void QDockFrame::dropEvent(QDropEvent* e)
 	maskWidget_->showOnDockArea(NoneArea);
 }
 
-void QDockFrame::resizeEvent(QResizeEvent *)
-{
-	relayout();
-}
-
-void QDockFrame::relayout()
-{
-	rootNode_->setGeometry(rect());
-	if (!rootNode_->isVisible())
-	{
-		rootNode_->show();
-	}
-}
-
 void QDockFrame::onDragEnterPanel()
 {
 	showArrow();
@@ -137,4 +154,75 @@ void QDockFrame::onEndDragAtPanel()
 	arrows_.show(NoneArea);
 	lastMaskArea_ = NoneArea;
 	maskWidget_->showOnDockArea(NoneArea);
+}
+
+QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
+{
+	QDockSideButton* btn = new QDockSideButton(title,this);
+	btn->setCheckable(true);
+
+	switch (area)
+	{
+	case CenterTopArea:
+	case TopArea:
+		if (topBar_->isHidden())
+		{
+			topBar_->show();
+		}
+		return topBar_->addWidget(btn);
+		break;
+	case CenterRightArea:
+	case RightArea:
+		btn->setOrientation(Qt::Vertical);
+		btn->setMirrored(true);
+		if (rightBar_->isHidden())
+		{
+			rightBar_->show();
+		}
+		return rightBar_->addWidget(btn);
+		break;
+	case CenterBottomArea:
+	case BottomArea:
+		if (bottomBar_->isHidden())
+		{
+			bottomBar_->show();
+		}
+		return bottomBar_->addWidget(btn);
+		break;
+	case NoneArea:
+	case LeftArea:
+	case CenterArea:
+	case CenterLeftArea:
+	default:
+		btn->setOrientation(Qt::Vertical);
+		if (leftBar_->isHidden())
+		{
+			leftBar_->show();
+		}
+		return leftBar_->addWidget(btn);
+	}
+
+	return NULL;
+}
+
+bool QDockFrame::delSideButton(QAction* action)
+{
+	QToolBar* tmp[] = { leftBar_, rightBar_, topBar_, bottomBar_ };
+	for (int i = 0; i < 4; ++i)
+	{
+		QToolBar* p = tmp[i];
+		QWidget* w = p->widgetForAction(action);
+		if (w)
+		{
+			w->deleteLater();
+			p->removeAction(action);
+			if (p->actions().empty())
+			{
+				p->hide();
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

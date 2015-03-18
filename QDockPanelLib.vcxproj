@@ -178,6 +178,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QDockPanelComponents.cpp" />
     <ClCompile Include="qdockpanellib_plugin_import.cpp" />
+    <ClCompile Include="QDockSideButton.cpp" />
     <ClCompile Include="QDockTabBar.cpp" />
     <ClCompile Include="QDockTabWidget.cpp" />
     <ClCompile Include="Release\moc_QDockManager.cpp">
@@ -200,6 +201,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="QDockSideButton.h" />
     <CustomBuild Include="QDockTabWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing QDockTabWidget.h...</Message>
