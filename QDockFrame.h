@@ -10,8 +10,8 @@ class QDockPanel;
 class QDockNode;
 class QDockMaskWidget;
 class QDockManager;
-class QToolBar;
-class QAction;
+class QDockSideBar;
+class QDockSideButton;
 
 class QDockFrame : public QWidget
 {
@@ -40,10 +40,10 @@ private:
 
 	DockArea lastMaskArea_;
 
-	QToolBar* leftBar_;
-	QToolBar* rightBar_;
-	QToolBar* topBar_;
-	QToolBar* bottomBar_;
+	QDockSideBar* leftBar_;
+	QDockSideBar* rightBar_;
+	QDockSideBar* topBar_;
+	QDockSideBar* bottomBar_;
 
 private:
 	void onDragEnterPanel();
@@ -51,8 +51,7 @@ private:
 	void onEndDragAtPanel();
 
 private:
-	QAction* addSideButton(const QString& title,DockArea area);
-	bool delSideButton(QAction* action);
+	QDockSideButton* addSideButton(const QString& title, DockArea area);
 	friend QDockManager;
 };
 

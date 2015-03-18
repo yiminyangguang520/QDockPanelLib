@@ -9,6 +9,7 @@
 class QDockManager;
 class QDockMaskWidget;
 class QDockTabWidget;
+class QDockSideButton;
 
 class QDockPanel : public QWidget
 {
@@ -40,6 +41,7 @@ private:
 	void setDockStatus();
 	void setFloatStatus();
 	void setTabbedStatus(bool isTabbed, QDockPanel* parentTabPanel);
+	void setAutoHideStatus();
 
 private:
 	int id_;	//panel ID
@@ -59,6 +61,7 @@ private:
 	QWidget* dockTarget_;
 	DockArea area_;
 	QPoint floatPos_;
+	QDockSideButton* autoHideBtn_;
 
 
 	enum PanelType

@@ -17,7 +17,7 @@ public:
 	QDockManager(QWidget *parent);
 	~QDockManager();
 
-	QDockFrame* getDockFrame(){ return dockFrmae_; }
+	QDockFrame* getDockFrame(){ return dockFrame_; }
 	QDockPanel* addPanel(int id, const QString& title, QPoint pos, QSize size, QWidget* contensWidget = NULL);
 	QDockPanel* getDockPanelByID(int id);
 
@@ -25,6 +25,7 @@ public slots:
 	bool dockPanelTo(QDockPanel* panel, QWidget* target, DockArea area);
 	bool dockPanelToFrame(QDockPanel* panel, DockArea area);
 	bool dockPanelToPanel(QDockPanel* from, QDockPanel* target, DockArea area);
+	bool autoHidePanel(QDockPanel* panel, bool hide);
 
 public:
 	bool isRootNode(QDockNode* node);
@@ -38,7 +39,7 @@ private:
 	bool dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, DockArea area);
 	bool dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, DockArea area);
 private:
-	QDockFrame* dockFrmae_;
+	QDockFrame* dockFrame_;
 	std::map<int, QDockPanel*> dockPanels_;
 
 	friend QDockPanel;

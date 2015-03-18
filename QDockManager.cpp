@@ -6,9 +6,11 @@
 #include <QList>
 #include "QDockMaskWidget.h"
 #include "QDockTabWidget.h"
+#include "QDockSideButton.h"
+#include "QDockSideBar.h"
 
 QDockManager::QDockManager(QWidget *parent)
-	: QObject(parent), dockFrmae_(new QDockFrame(this, parent))
+	: QObject(parent), dockFrame_(new QDockFrame(this, parent))
 {
 
 }
@@ -24,7 +26,7 @@ QDockPanel* QDockManager::addPanel(int id, const QString& title, QPoint pos, QSi
 	{
 		return NULL;
 	}
-	QDockPanel* p = new QDockPanel(this, dockFrmae_);
+	QDockPanel* p = new QDockPanel(this, dockFrame_);
 	p->setId(id);
 	p->setWindowTitle(title);
 	p->resetContensWidget(contensWidget);
@@ -84,21 +86,21 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			sizes.push_back(30);
 			sizes.push_back(70);
 
-			int c = dockFrmae_->rootNode_->count();
+			int c = dockFrame_->rootNode_->count();
 			if (c == 1)
 			{
-				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-				dockFrmae_->rootNode_->insertWidget(0, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+				dockFrame_->rootNode_->insertWidget(0, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
-				QDockNode* tmpNode = dockFrmae_->rootNode_;
-				dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-				dockFrmae_->rootNode_->insertWidget(0, fromNode);
-				dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				QDockNode* tmpNode = dockFrame_->rootNode_;
+				dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+				dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+				dockFrame_->rootNode_->insertWidget(0, fromNode);
+				dockFrame_->rootNode_->insertWidget(1, tmpNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -112,21 +114,21 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			sizes.push_back(30);
 			sizes.push_back(70);
 
-			int c = dockFrmae_->rootNode_->count();
+			int c = dockFrame_->rootNode_->count();
 			if (c == 1)
 			{
-				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-				dockFrmae_->rootNode_->insertWidget(0, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+				dockFrame_->rootNode_->insertWidget(0, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
-				QDockNode* tmpNode = dockFrmae_->rootNode_;
-				dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-				dockFrmae_->rootNode_->insertWidget(0, fromNode);
-				dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				QDockNode* tmpNode = dockFrame_->rootNode_;
+				dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+				dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+				dockFrame_->rootNode_->insertWidget(0, fromNode);
+				dockFrame_->rootNode_->insertWidget(1, tmpNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -140,21 +142,21 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			sizes.push_back(70);
 			sizes.push_back(30);
 
-			int c = dockFrmae_->rootNode_->count();
+			int c = dockFrame_->rootNode_->count();
 			if (c == 1)
 			{
-				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-				dockFrmae_->rootNode_->insertWidget(1, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+				dockFrame_->rootNode_->insertWidget(1, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
-				QDockNode* tmpNode = dockFrmae_->rootNode_;
-				dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-				dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-				dockFrmae_->rootNode_->insertWidget(0, tmpNode);
-				dockFrmae_->rootNode_->insertWidget(1, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				QDockNode* tmpNode = dockFrame_->rootNode_;
+				dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+				dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+				dockFrame_->rootNode_->insertWidget(0, tmpNode);
+				dockFrame_->rootNode_->insertWidget(1, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -168,21 +170,21 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			sizes.push_back(70);
 			sizes.push_back(30);
 
-			int c = dockFrmae_->rootNode_->count();
+			int c = dockFrame_->rootNode_->count();
 			if (c == 1)
 			{
-				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-				dockFrmae_->rootNode_->insertWidget(0, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+				dockFrame_->rootNode_->insertWidget(0, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else if (c == 2)
 			{
-				QDockNode* tmpNode = dockFrmae_->rootNode_;
-				dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-				dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-				dockFrmae_->rootNode_->insertWidget(0, tmpNode);
-				dockFrmae_->rootNode_->insertWidget(1, fromNode);
-				dockFrmae_->rootNode_->setSizes(sizes);
+				QDockNode* tmpNode = dockFrame_->rootNode_;
+				dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+				dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+				dockFrame_->rootNode_->insertWidget(0, tmpNode);
+				dockFrame_->rootNode_->insertWidget(1, fromNode);
+				dockFrame_->rootNode_->setSizes(sizes);
 			}
 			else
 			{
@@ -191,11 +193,11 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 			break;
 		}
 		case CenterArea:
-			assert(dockFrmae_->rootNode_->count() == 0);
-			dockFrmae_->rootNode_->deleteLater();
-			dockFrmae_->rootNode_ = fromNode;
+			assert(dockFrame_->rootNode_->count() == 0);
+			dockFrame_->rootNode_->deleteLater();
+			dockFrame_->rootNode_ = fromNode;
 			fromNode->show();
-			fromNode->setParent(dockFrmae_);
+			fromNode->setParent(dockFrame_);
 			break;
 		default:
 			return false;
@@ -213,23 +215,23 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 		sizes.push_back(30);
 		sizes.push_back(70);
 
-		int c = dockFrmae_->rootNode_->count();
+		int c = dockFrame_->rootNode_->count();
 		if (c == 1)
 		{
-			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
+			dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
 			panel->setDockStatus();
-			dockFrmae_->rootNode_->insertWidget(0, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_->insertWidget(0, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else if (c == 2)
 		{
-			QDockNode* tmpNode = dockFrmae_->rootNode_;
+			QDockNode* tmpNode = dockFrame_->rootNode_;
 			panel->setDockStatus();
-			dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-			dockFrmae_->rootNode_->insertWidget(0, panel);
-			dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+			dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+			dockFrame_->rootNode_->insertWidget(0, panel);
+			dockFrame_->rootNode_->insertWidget(1, tmpNode);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else
 		{
@@ -243,23 +245,23 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 		sizes.push_back(30);
 		sizes.push_back(70);
 
-		int c = dockFrmae_->rootNode_->count();
+		int c = dockFrame_->rootNode_->count();
 		if (c == 1)
 		{
-			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
+			dockFrame_->rootNode_->setOrientation(Qt::Vertical);
 			panel->setDockStatus();
-			dockFrmae_->rootNode_->insertWidget(0, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_->insertWidget(0, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else if (c == 2)
 		{
-			QDockNode* tmpNode = dockFrmae_->rootNode_;
+			QDockNode* tmpNode = dockFrame_->rootNode_;
 			panel->setDockStatus();
-			dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-			dockFrmae_->rootNode_->insertWidget(0, panel);
-			dockFrmae_->rootNode_->insertWidget(1, tmpNode);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+			dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+			dockFrame_->rootNode_->insertWidget(0, panel);
+			dockFrame_->rootNode_->insertWidget(1, tmpNode);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else
 		{
@@ -273,23 +275,23 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 		sizes.push_back(70);
 		sizes.push_back(30);
 
-		int c = dockFrmae_->rootNode_->count();
+		int c = dockFrame_->rootNode_->count();
 		if (c == 1)
 		{
-			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
+			dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
 			panel->setDockStatus();
-			dockFrmae_->rootNode_->insertWidget(1, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_->insertWidget(1, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else if (c == 2)
 		{
-			QDockNode* tmpNode = dockFrmae_->rootNode_;
+			QDockNode* tmpNode = dockFrame_->rootNode_;
 			panel->setDockStatus();
-			dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-			dockFrmae_->rootNode_->setOrientation(Qt::Horizontal);
-			dockFrmae_->rootNode_->insertWidget(0, tmpNode);
-			dockFrmae_->rootNode_->insertWidget(1, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+			dockFrame_->rootNode_->setOrientation(Qt::Horizontal);
+			dockFrame_->rootNode_->insertWidget(0, tmpNode);
+			dockFrame_->rootNode_->insertWidget(1, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else
 		{
@@ -303,23 +305,23 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 		sizes.push_back(70);
 		sizes.push_back(30);
 
-		int c = dockFrmae_->rootNode_->count();
+		int c = dockFrame_->rootNode_->count();
 		if (c == 1)
 		{
-			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
+			dockFrame_->rootNode_->setOrientation(Qt::Vertical);
 			panel->setDockStatus();
-			dockFrmae_->rootNode_->insertWidget(0, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_->insertWidget(0, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else if (c == 2)
 		{
-			QDockNode* tmpNode = dockFrmae_->rootNode_;
+			QDockNode* tmpNode = dockFrame_->rootNode_;
 			panel->setDockStatus();
-			dockFrmae_->rootNode_ = new QDockNode(dockFrmae_);
-			dockFrmae_->rootNode_->setOrientation(Qt::Vertical);
-			dockFrmae_->rootNode_->insertWidget(0, tmpNode);
-			dockFrmae_->rootNode_->insertWidget(1, panel);
-			dockFrmae_->rootNode_->setSizes(sizes);
+			dockFrame_->rootNode_ = new QDockNode(dockFrame_);
+			dockFrame_->rootNode_->setOrientation(Qt::Vertical);
+			dockFrame_->rootNode_->insertWidget(0, tmpNode);
+			dockFrame_->rootNode_->insertWidget(1, panel);
+			dockFrame_->rootNode_->setSizes(sizes);
 		}
 		else
 		{
@@ -328,10 +330,10 @@ bool QDockManager::dockPanelToFrame(QDockPanel* panel, DockArea area)
 		break;
 	}
 	case CenterArea:
-		assert(dockFrmae_->rootNode_->count() == 0);
+		assert(dockFrame_->rootNode_->count() == 0);
 		panel->setDockStatus();
 		//panel->setParent(dockFrmae_->rootNode_);
-		dockFrmae_->rootNode_->addWidget(panel);
+		dockFrame_->rootNode_->addWidget(panel);
 		break;
 	default:
 		return false;
@@ -362,16 +364,95 @@ bool QDockManager::dockPanelToPanel(QDockPanel* from, QDockPanel* target, DockAr
 	return false;
 }
 
+bool QDockManager::autoHidePanel(QDockPanel* panel, bool hide)
+{
+	//如果是一个包着tab的外壳panel，只关心里面的子panel
+	if (panel->isTabbed_)
+	{
+		QDockTabWidget* tabWidget = qobject_cast<QDockTabWidget*>(panel->contensWidget_);
+		assert(tabWidget);
+		for (int i = 0; i < tabWidget->count();++i)
+		{
+			QDockPanel* subpanel = qobject_cast<QDockPanel*>(tabWidget->widget(i));
+			autoHidePanel(subpanel, hide);
+		}
+
+		panel->deleteLater();
+		return true;
+	}
+
+	//设置为自动隐藏
+	if (hide)
+	{
+		panel->setAutoHideStatus();
+		panel->autoHideBtn_ = dockFrame_->addSideButton(panel->windowTitle(),panel->area_);
+		connect(panel->autoHideBtn_, &QDockSideButton::toggled, [panel](bool checked)
+		{
+			panel->setVisible(checked);
+		});
+
+		QPoint newPos;
+		QSize newSize;
+		switch (panel->area_)
+		{
+		case CenterTopArea:
+		case TopArea:
+			newPos.setX(0);
+			newPos.setY(dockFrame_->topBar_->sizeHint().height());
+			newSize.setWidth(dockFrame_->width());
+			newSize.setHeight(dockFrame_->height() / 4);
+			break;
+		case CenterRightArea:
+		case RightArea:
+			newPos.setX(dockFrame_->width() / 4 * 3 - dockFrame_->rightBar_->sizeHint().width());
+			newPos.setY(0);
+			newSize.setWidth(dockFrame_->width() / 4);
+			newSize.setHeight(dockFrame_->height());
+			break;
+		case CenterBottomArea:
+		case BottomArea:
+			newPos.setX(0);
+			newPos.setY(dockFrame_->height() / 4 * 3 - dockFrame_->bottomBar_->sizeHint().height());
+			newSize.setWidth(dockFrame_->width());
+			newSize.setHeight(dockFrame_->height() / 4);
+			break;
+		case NoneArea:
+		case LeftArea:
+		case CenterArea:
+		case CenterLeftArea:
+		default:
+			newPos.setX(dockFrame_->leftBar_->sizeHint().width());
+			newPos.setY(0);
+			newSize.setWidth(dockFrame_->width() / 4);
+			newSize.setHeight(dockFrame_->height());
+			break;
+		}
+
+		panel->move(newPos);
+		panel->resize(newSize);
+
+		panel->autoHideBtn_->setChecked(true);
+
+		return true;
+	}
+
+	//取消自动隐藏
+	panel->dockTo(panel->dockTarget_, panel->area_);
+
+	panel->autoHideBtn_->deleteLater();
+	panel->autoHideBtn_ = NULL;
+}
+
 bool QDockManager::isRootNode(QDockNode* node)
 {
-	return node == dockFrmae_->rootNode_;
+	return node == dockFrame_->rootNode_;
 }
 
 void QDockManager::undockPanel(QDockPanel* panel)
 {
 	QDockNode* parentNode = qobject_cast<QDockNode*>(panel->parentWidget());
 
-	panel->setParent(dockFrmae_);
+	panel->setParent(dockFrame_);
 	panel->setFloatStatus();
 	panel->move(panel->floatPos_);
 	panel->show();
@@ -402,7 +483,7 @@ void QDockManager::undockPanel(QDockPanel* panel)
 			QDockPanel* otherPanel = qobject_cast<QDockPanel*>(widget);
 			if (otherPanel)
 			{
-				otherPanel->setParent(dockFrmae_);
+				otherPanel->setParent(dockFrame_);
 				otherPanel->setFloatStatus();
 				otherPanel->resize(containerPanel->size());
 				otherPanel->move(containerPanel->pos());
@@ -442,17 +523,17 @@ void QDockManager::undockPanel(QDockPanel* panel)
 
 void QDockManager::onDragEnterPanel()
 {
-	dockFrmae_->onDragEnterPanel();
+	dockFrame_->onDragEnterPanel();
 }
 
 void QDockManager::onDragLeavePanel()
 {
-	dockFrmae_->onDragLeavePanel();
+	dockFrame_->onDragLeavePanel();
 }
 
 void QDockManager::onEndDragAtPanel()
 {
-	dockFrmae_->onEndDragAtPanel();
+	dockFrame_->onEndDragAtPanel();
 }
 
 bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, DockArea area)
@@ -474,7 +555,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 		break;
 		case CenterLeftArea:
 		{
-			QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+			QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 			tabPanel->panelType_ = QDockPanel::SplitContainer;
 			tabPanel->resize(target->size());
 			tabPanel->move(target->pos());
@@ -492,7 +573,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 		break;
 		case CenterTopArea:
 		{
-			QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+			QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 			tabPanel->panelType_ = QDockPanel::SplitContainer;
 			tabPanel->resize(target->size());
 			tabPanel->move(target->pos());
@@ -510,7 +591,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 		break;
 		case CenterRightArea:
 		{
-			QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+			QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 			tabPanel->panelType_ = QDockPanel::SplitContainer;
 			tabPanel->resize(target->size());
 			tabPanel->move(target->pos());
@@ -528,7 +609,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 		break;
 		case CenterBottomArea:
 		{
-			QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+			QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 			tabPanel->panelType_ = QDockPanel::SplitContainer;
 			tabPanel->resize(target->size());
 			tabPanel->move(target->pos());
@@ -631,7 +712,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 	{
 	case CenterArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::TabContainer;
 		tabPanel->resize(target->size());
 		tabPanel->move(target->pos());
@@ -651,7 +732,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 	break;
 	case CenterLeftArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::SplitContainer;
 		tabPanel->resize(target->size());
 		tabPanel->move(target->pos());
@@ -669,7 +750,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 	break;
 	case CenterTopArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::SplitContainer;
 		tabPanel->resize(target->size());
 		tabPanel->move(target->pos());
@@ -687,7 +768,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 	break;
 	case CenterRightArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::SplitContainer;
 		tabPanel->resize(target->size());
 		tabPanel->move(target->pos());
@@ -705,7 +786,7 @@ bool QDockManager::dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, D
 	break;
 	case CenterBottomArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::SplitContainer;
 		tabPanel->resize(target->size());
 		tabPanel->move(target->pos());
@@ -899,7 +980,7 @@ bool QDockManager::dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, 
 			break;
 		case CenterArea:
 		{
-			QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+			QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 			tabPanel->panelType_ = QDockPanel::TabContainer;
 			tabPanel->setAcceptDrops(false);
 			QDockTabWidget* tabWidget = new QDockTabWidget(tabPanel);
@@ -966,7 +1047,7 @@ bool QDockManager::dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, 
 		break;
 	case CenterArea:
 	{
-		QDockPanel* tabPanel = new QDockPanel(this, dockFrmae_);
+		QDockPanel* tabPanel = new QDockPanel(this, dockFrame_);
 		tabPanel->panelType_ = QDockPanel::TabContainer;
 		tabPanel->setAcceptDrops(false);
 		QDockTabWidget* tabWidget = new QDockTabWidget(tabPanel);

@@ -10,7 +10,7 @@
 #include "QDockManager.h"
 #include <QLayout>
 #include "QDockSideButton.h"
-#include <QToolBar>
+#include "QDockSideBar.h"
 
 QDockFrame::QDockFrame(QDockManager* manager, QWidget *parent)
 	: QWidget(parent), arrows_(this), manager_(manager), lastMaskArea_(NoneArea)
@@ -23,13 +23,13 @@ QDockFrame::QDockFrame(QDockManager* manager, QWidget *parent)
 	
 	rootNode_ = new QDockNode(this);
 
-	leftBar_ = new QToolBar(this);
+	leftBar_ = new QDockSideBar(this);
 	leftBar_->setOrientation(Qt::Vertical);
-	rightBar_ = new QToolBar(this);
+	rightBar_ = new QDockSideBar(this);
 	rightBar_->setOrientation(Qt::Vertical);
-	topBar_ = new QToolBar(this);
+	topBar_ = new QDockSideBar(this);
 	topBar_->setOrientation(Qt::Horizontal);
-	bottomBar_ = new QToolBar(this);
+	bottomBar_ = new QDockSideBar(this);
 	bottomBar_->setOrientation(Qt::Horizontal);
 
 	vlay->addWidget(topBar_);
@@ -156,7 +156,7 @@ void QDockFrame::onEndDragAtPanel()
 	maskWidget_->showOnDockArea(NoneArea);
 }
 
-QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
+QDockSideButton* QDockFrame::addSideButton(const QString& title, DockArea area)
 {
 	QDockSideButton* btn = new QDockSideButton(title,this);
 	btn->setCheckable(true);
@@ -169,7 +169,7 @@ QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
 		{
 			topBar_->show();
 		}
-		return topBar_->addWidget(btn);
+		topBar_->addWidget(btn);
 		break;
 	case CenterRightArea:
 	case RightArea:
@@ -179,7 +179,7 @@ QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
 		{
 			rightBar_->show();
 		}
-		return rightBar_->addWidget(btn);
+		rightBar_->addWidget(btn);
 		break;
 	case CenterBottomArea:
 	case BottomArea:
@@ -187,7 +187,7 @@ QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
 		{
 			bottomBar_->show();
 		}
-		return bottomBar_->addWidget(btn);
+		bottomBar_->addWidget(btn);
 		break;
 	case NoneArea:
 	case LeftArea:
@@ -199,30 +199,10 @@ QAction* QDockFrame::addSideButton(const QString& title, DockArea area)
 		{
 			leftBar_->show();
 		}
-		return leftBar_->addWidget(btn);
+		leftBar_->addWidget(btn);
+		break;
 	}
 
-	return NULL;
+	return btn;
 }
 
-bool QDockFrame::delSideButton(QAction* action)
-{
-	QToolBar* tmp[] = { leftBar_, rightBar_, topBar_, bottomBar_ };
-	for (int i = 0; i < 4; ++i)
-	{
-		QToolBar* p = tmp[i];
-		QWidget* w = p->widgetForAction(action);
-		if (w)
-		{
-			w->deleteLater();
-			p->removeAction(action);
-			if (p->actions().empty())
-			{
-				p->hide();
-				return true;
-			}
-		}
-	}
-
-	return false;
-}

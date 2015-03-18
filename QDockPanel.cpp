@@ -26,13 +26,13 @@ QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 	edgeWidth_(3), titleRectHeight_(20), dockStatus_(Floating),
 	arrows_(this), lastMaskArea_(NoneArea), isTabbed_(false),
 	parentTabPanel_(NULL), panelType_(DockPanel),
-	dockTarget_(NULL), area_(NoneArea)
+	dockTarget_(NULL), area_(NoneArea), autoHideBtn_(NULL)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this, SIGNAL(windowTitleChanged(const QString&)), title_, SLOT(setTitle(const QString&)));
 	connect(title_, &QDockPanelTitle::pinButtonClicked, [this]
 	{
-		assert(dockStatus_ == Docked || dockStatus_ == AutoHide);
+// 		assert(dockStatus_ == Docked || dockStatus_ == AutoHide);
 		setAutoHide(dockStatus_ == Docked);
 	});
 	connect(title_, &QDockPanelTitle::doubleClicked, [this]
@@ -281,7 +281,7 @@ void QDockPanel::startDrag()
 
 void QDockPanel::setAutoHide(bool hide)
 {
-	//TODO:complete
+	manager_->autoHidePanel(this, hide);
 
 	dockStatus_ = hide ? AutoHide : Docked;
 }
@@ -290,5 +290,14 @@ void QDockPanel::setTabbedStatus(bool isTabbed, QDockPanel* parentTabPanel)
 {
 	isTabbed_ = isTabbed;
 	parentTabPanel_ = parentTabPanel;
+	relayout();
+}
+
+void QDockPanel::setAutoHideStatus()
+{
+	setParent(manager_->dockFrame_);
+	//setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+	resize(floatSize_);
+	dockStatus_ = AutoHide;
 	relayout();
 }
