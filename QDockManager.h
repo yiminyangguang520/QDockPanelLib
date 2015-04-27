@@ -8,6 +8,7 @@
 class QDockPanel;
 class QDockFrame;
 class QDockNode;
+class IAcceptDrop;
 
 class QDockManager : public QObject
 {
@@ -38,6 +39,49 @@ private:
 	void onEndDragAtPanel();
 	bool dockPanelToFloatPanel(QDockPanel* from, QDockPanel* target, DockArea area);
 	bool dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, DockArea area);
+
+	template<typename T>
+	T* findChild(const QPoint& pos, const QWidget* except = nullptr)
+	{
+		return findChild<T>(dockFrame_, pos, except);
+	}
+	template<typename T>
+	T* findChild(QWidget* p, const QPoint& pos, const QWidget* except)
+	{
+		for (int i = p->children().size() - 1; i >= 0; --i)
+		{
+			QWidget *child = qobject_cast<QWidget*>(p->children().at(i));
+			if (!child ||
+				//child->isWindow() ||
+				child->isHidden() ||
+				child->testAttribute(Qt::WA_TransparentForMouseEvents)
+				)
+			{
+				continue;
+			}
+
+			T* w = nullptr;
+
+			if (w = findChild<T>(child, pos, except))
+			{
+				return w;
+			}
+
+			w = qobject_cast<T*>(child);
+			if (!w
+				|| !w->rect().contains(w->mapFromGlobal(pos))
+				|| w == except)
+			{
+				continue;
+			}
+
+			return w;
+		}
+
+		return nullptr;
+	}
+
+	IAcceptDrop* getDropTarget(const QPoint& pos, const QWidget* except);
 private:
 	QDockFrame* dockFrame_;
 	std::map<int, QDockPanel*> dockPanels_;
@@ -45,5 +89,6 @@ private:
 	friend QDockPanel;
 	friend QDockFrame;
 };
+
 
 #endif // QDOCKMANAGER_H

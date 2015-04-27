@@ -20,13 +20,15 @@
 #include <QDebug>
 
 
+
 QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 	:QWidget(frame, Qt::FramelessWindowHint | Qt::Tool),
 	manager_(manager), contensWidget_(NULL),
 	edgeWidth_(3), titleRectHeight_(20), dockStatus_(Floating),
 	arrows_(this), lastMaskArea_(NoneArea), isTabbed_(false),
 	parentTabPanel_(NULL), panelType_(DockPanel),
-	dockTarget_(NULL), area_(NoneArea), autoHideBtn_(NULL)
+	dockTarget_(NULL), area_(NoneArea), autoHideBtn_(NULL),
+	isLBtnPressed_(false), lastDragOverPanelOrFrame_(nullptr)
 {
 	title_ = new QDockPanelTitle(this);
 	connect(this, SIGNAL(windowTitleChanged(const QString&)), title_, SLOT(setTitle(const QString&)));
@@ -50,6 +52,69 @@ QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 			manager_->dockPanelTo(this, dockTarget_, area_);
 		}
 	});
+	title_->onTitleMousePressEvent = [this](QMouseEvent* e)
+	{
+		if (e->button() != Qt::LeftButton)
+		{
+			return;
+		}
+		isLBtnPressed_ = true;
+		pressedPos_ = e->globalPos();
+		oldPos_ = pos();
+		lastDragOverPanelOrFrame_ = nullptr;
+	};
+	title_->onTitleMouseReleaseEvent = [this](QMouseEvent* e)
+	{
+		isLBtnPressed_ = false;
+		lastDragOverPanelOrFrame_ = nullptr;
+
+		IAcceptDrop* target = manager_->getDropTarget(e->globalPos(), this);
+		if (target)
+		{
+			target->drop(this, e->globalPos());
+		}
+	};
+	title_->onTitleMouseMoveEvent = [this](QMouseEvent* e)
+	{
+		if (!isLBtnPressed_)
+		{
+			return;
+		}
+
+		if (dockStatus_ == Docked)
+		{
+			oldPos_ = parentWidget()->mapToGlobal(oldPos_);
+			undock();
+		}
+
+		move(oldPos_.x() + e->globalX() - pressedPos_.x(), oldPos_.y() + e->globalY() - pressedPos_.y());
+
+		if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+		{
+			return;
+		}
+
+		IAcceptDrop* target = manager_->getDropTarget(e->globalPos(), this);
+
+		if (target != lastDragOverPanelOrFrame_)
+		{
+			if (target)
+			{
+				target->dragEnter();
+			}
+			if (lastDragOverPanelOrFrame_)
+			{
+				lastDragOverPanelOrFrame_->dragLeave();
+			}
+			lastDragOverPanelOrFrame_ = target;
+		}
+
+		if (lastDragOverPanelOrFrame_)
+		{
+			lastDragOverPanelOrFrame_->dragMove(e->globalPos());
+		}
+	};
+
 	leftEdge_ = new QDockPanelEdgeLeft(this);
 	leftTopEdge_ = new QDockPanelEdgeLeftTop(this);
 	topEdge_ = new QDockPanelEdgeTop(this);
@@ -267,6 +332,42 @@ void QDockPanel::dropEvent(QDropEvent* e)
 	maskWidget_->showOnDockArea(NoneArea);
 
 	manager_->onEndDragAtPanel();
+}
+
+void QDockPanel::dragEnter()
+{
+	showArrow();
+}
+
+void QDockPanel::dragLeave()
+{
+	arrows_.show(NoneArea);
+	maskWidget_->showOnDockArea(NoneArea);
+}
+
+void QDockPanel::drop(QWidget* from, QPoint pos)
+{
+	QDockPanel* panel = qobject_cast<QDockPanel*>(from);
+	if (panel && lastMaskArea_ != NoneArea)
+	{
+		manager_->dockPanelTo(qobject_cast<QDockPanel*>(panel), this, lastMaskArea_);
+	}
+
+	lastMaskArea_ = NoneArea;
+	arrows_.show(NoneArea);
+	maskWidget_->showOnDockArea(NoneArea);
+
+	manager_->onEndDragAtPanel();
+}
+
+void QDockPanel::dragMove(const QPoint& pos)
+{
+	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(pos));
+	if (area != lastMaskArea_)
+	{
+		maskWidget_->showOnDockArea(area);
+		lastMaskArea_ = area;
+	}
 }
 
 void QDockPanel::showArrow()

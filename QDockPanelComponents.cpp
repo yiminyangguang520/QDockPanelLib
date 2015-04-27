@@ -61,12 +61,16 @@ void QDockPanelTitle::mousePressEvent(QMouseEvent* e)
 	{
 		return;
 	}
-	if (e->button() == Qt::LeftButton)
+	if (onTitleMousePressEvent)
 	{
-		isLBtnPressed_ = true;
-		pressedPos_ = e->globalPos();
-		parentOldPos_ = parentWidget()->pos();
+		onTitleMousePressEvent(e);
 	}
+// 	if (e->button() == Qt::LeftButton)
+// 	{
+// 		isLBtnPressed_ = true;
+// 		pressedPos_ = e->globalPos();
+// 		parentOldPos_ = parentWidget()->pos();
+// 	}
 }
 
 void QDockPanelTitle::mouseReleaseEvent(QMouseEvent* e)
@@ -81,8 +85,11 @@ void QDockPanelTitle::mouseReleaseEvent(QMouseEvent* e)
 		emit pinButtonClicked();
 	}
 
-
-	isLBtnPressed_ = false;
+	if (onTitleMouseReleaseEvent)
+	{
+		onTitleMouseReleaseEvent(e);
+	}
+// 	isLBtnPressed_ = false;
 }
 
 void QDockPanelTitle::mouseMoveEvent(QMouseEvent* e)
@@ -96,25 +103,29 @@ void QDockPanelTitle::mouseMoveEvent(QMouseEvent* e)
 		repaint();
 	}
 
-	if (!isLBtnPressed_)
+	if (onTitleMouseMoveEvent)
 	{
-		return;
+		onTitleMouseMoveEvent(e);
 	}
-
-	QDockPanel* panel = qobject_cast<QDockPanel*>(parentWidget());
-	if (panel && panel->dockStatus_ == Docked)
-	{
-		panel->undock();
-	}
-
-	if (QApplication::keyboardModifiers() != Qt::ControlModifier)
-	{
-		isLBtnPressed_ = false;
-		startDrag();
-		return;
-	}
-
-	parentWidget()->move(parentOldPos_.x() + e->globalX() - pressedPos_.x(), parentOldPos_.y() + e->globalY() - pressedPos_.y());
+// 	if (!isLBtnPressed_)
+// 	{
+// 		return;
+// 	}
+// 
+// 	QDockPanel* panel = qobject_cast<QDockPanel*>(parentWidget());
+// 	if (panel && panel->dockStatus_ == Docked)
+// 	{
+// 		panel->undock();
+// 	}
+// 
+// 	if (QApplication::keyboardModifiers() != Qt::ControlModifier)
+// 	{
+// 		isLBtnPressed_ = false;
+// 		startDrag();
+// 		return;
+// 	}
+// 
+// 	parentWidget()->move(parentOldPos_.x() + e->globalX() - pressedPos_.x(), parentOldPos_.y() + e->globalY() - pressedPos_.y());
 }
 
 void QDockPanelTitle::resizeEvent(QResizeEvent *)

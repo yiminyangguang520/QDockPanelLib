@@ -1071,3 +1071,15 @@ bool QDockManager::dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, 
 
 	return true;
 }
+
+IAcceptDrop* QDockManager::getDropTarget(const QPoint& pos, const QWidget* except)
+{
+	IAcceptDrop* target = findChild<QDockPanel>(pos, except);
+	if (!target)
+	{
+		target = dockFrame_->rect().contains(dockFrame_->mapFromGlobal(pos)) ? dockFrame_ : nullptr;
+	}
+
+	return target;
+}
+

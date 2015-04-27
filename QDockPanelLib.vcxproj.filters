@@ -152,6 +152,9 @@
     <ClCompile Include="Release\moc_QDockSideBar.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="IAcceptDrop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="QDockArrows.h">
@@ -210,6 +213,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QDockSideButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IAcceptDrop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

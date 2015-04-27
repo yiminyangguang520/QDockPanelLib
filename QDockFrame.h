@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include "QDockCommon.h"
 #include "QDockArrows.h"
+#include "IAcceptDrop.h"
 #include <map>
 
 class QDockPanel;
@@ -13,7 +14,7 @@ class QDockManager;
 class QDockSideBar;
 class QDockSideButton;
 
-class QDockFrame : public QWidget
+class QDockFrame : public QWidget, public IAcceptDrop
 {
 	Q_OBJECT
 
@@ -52,6 +53,15 @@ private:
 
 private:
 	QDockSideButton* addSideButton(const QString& title, DockArea area);
+
+	virtual void dragEnter();
+
+	virtual void dragLeave();
+
+	virtual void drop(QWidget* from, QPoint pos);
+
+	virtual void dragMove(const QPoint& pos);
+
 	friend QDockManager;
 };
 

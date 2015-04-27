@@ -5,13 +5,14 @@
 #include "QDockCommon.h"
 #include "QDockPanelComponents.h"
 #include "QDockArrows.h"
+#include "IAcceptDrop.h"
 
 class QDockManager;
 class QDockMaskWidget;
 class QDockTabWidget;
 class QDockSideButton;
 
-class QDockPanel : public QWidget
+class QDockPanel : public QWidget, IAcceptDrop
 {
 	Q_OBJECT
 public:
@@ -83,6 +84,13 @@ private:
 	QDockPanelEdgeRightBottom* rightBottomEdge_;
 	QDockPanelEdgeLeftBottom* leftBottomEdge_;
 
+
+	bool isLBtnPressed_;
+	QPoint oldPos_;
+	QPoint pressedPos_;
+	IAcceptDrop* lastDragOverPanelOrFrame_;
+
+
 private:
 	void showArrow();
 protected:
@@ -97,6 +105,14 @@ protected:
 	virtual void dragLeaveEvent(QDragLeaveEvent *);
 
 	virtual void dropEvent(QDropEvent *);
+
+	virtual void dragEnter();
+
+	virtual void dragLeave();
+
+	virtual void drop(QWidget* from, QPoint pos);
+
+	virtual void dragMove(const QPoint& pos);
 
 	friend QDockManager;
 	friend QDockPanelTitle;

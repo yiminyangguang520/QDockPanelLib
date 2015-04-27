@@ -2,6 +2,7 @@
 #define QDOCKPANELCONPONENTS_H
 
 #include <QWidget>
+#include <functional>
 
 class QDockPanelTitle : public QWidget
 {
@@ -13,7 +14,7 @@ public:
 
 	virtual void paintEvent(QPaintEvent *);
 
-	public slots:
+public slots:
 	void setTitle(const QString& title);
 	void startDrag();
 
@@ -31,6 +32,10 @@ signals:
 	void pinButtonClicked();
 	void doubleClicked();
 
+public:
+	std::function<void(QMouseEvent*)> onTitleMousePressEvent;
+	std::function<void(QMouseEvent*)> onTitleMouseReleaseEvent;
+	std::function<void(QMouseEvent*)> onTitleMouseMoveEvent;
 
 private:
 	QString title_;

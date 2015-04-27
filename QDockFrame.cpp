@@ -206,3 +206,40 @@ QDockSideButton* QDockFrame::addSideButton(const QString& title, DockArea area)
 	return btn;
 }
 
+void QDockFrame::dragEnter()
+{
+	showArrow();
+}
+
+void QDockFrame::dragLeave()
+{
+// 	if (!rect().contains(mapFromGlobal(QCursor::pos())))
+// 	{
+	arrows_.show(NoneArea);
+// 	}
+	lastMaskArea_ = NoneArea;
+	maskWidget_->showOnDockArea(NoneArea);
+}
+
+void QDockFrame::drop(QWidget* from, QPoint pos)
+{
+	QDockPanel* panel = qobject_cast<QDockPanel*>(from);
+	if (panel && lastMaskArea_ != NoneArea)
+	{
+		manager_->dockPanelTo(panel, this, lastMaskArea_);
+	}
+
+	lastMaskArea_ = NoneArea;
+	arrows_.show(NoneArea);
+	maskWidget_->showOnDockArea(NoneArea);
+}
+
+void QDockFrame::dragMove(const QPoint& pos)
+{
+	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
+	if (area != lastMaskArea_)
+	{
+		maskWidget_->showOnDockArea(area);
+		lastMaskArea_ = area;
+	}
+}
