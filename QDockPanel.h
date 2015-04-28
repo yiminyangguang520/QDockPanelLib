@@ -98,14 +98,6 @@ protected:
 	void resizeEvent(QResizeEvent* e);
 	void resetContensWidgetPosAndSize();
 
-	virtual void dragEnterEvent(QDragEnterEvent *);
-
-	virtual void dragMoveEvent(QDragMoveEvent *);
-
-	virtual void dragLeaveEvent(QDragLeaveEvent *);
-
-	virtual void dropEvent(QDropEvent *);
-
 	virtual void dragEnter();
 
 	virtual void dragLeave();

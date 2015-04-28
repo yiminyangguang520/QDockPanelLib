@@ -1,12 +1,7 @@
 #include "QDockFrame.h"
-#include <QDrag>
-#include <QMimeData>
 #include "QDockNode.h"
 #include "QDockMaskWidget.h"
-#include <QByteArray>
-#include <QDataStream>
 #include "QDockPanel.h"
-#include "QDockDataBuilder.h"
 #include "QDockManager.h"
 #include <QLayout>
 #include "QDockSideButton.h"
@@ -65,72 +60,6 @@ void QDockFrame::showArrow()
 	{
 		arrows_.show(LeftArea | TopArea | RightArea | BottomArea);
 	}
-}
-
-
-
-void QDockFrame::dragEnterEvent(QDragEnterEvent* e)
-{
-	const QMimeData* mimeData = e->mimeData();
-	if (mimeData && mimeData->hasFormat("dockpanellib/dockdata"))
-	{
-		showArrow();
-		e->accept();
-	}
-	else
-	{
-		e->ignore();
-	}
-}
-
-void QDockFrame::dragMoveEvent(QDragMoveEvent* e)
-{
-	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
-	if (area != lastMaskArea_)
-	{
-		maskWidget_->showOnDockArea(area);
-		lastMaskArea_ = area;
-	}
-	e->accept();
-}
-
-void QDockFrame::dragLeaveEvent(QDragLeaveEvent* e)
-{
-	if (!rect().contains(mapFromGlobal(QCursor::pos())))
-	{
-		arrows_.show(NoneArea);
-	}
-	lastMaskArea_ = NoneArea;
-	maskWidget_->showOnDockArea(NoneArea);
-	e->accept();
-}
-
-void QDockFrame::dropEvent(QDropEvent* e)
-{
-	const QMimeData* mimeData = e->mimeData();
-	if (!mimeData->hasFormat("dockpanellib/dockdata"))
-	{
-		e->ignore();
-		return;
-	}
-	QByteArray ba = mimeData->data("dockpanellib/dockdata");
-	QDockDataBuilder builder;
-	builder.fromByteArray(ba);
-
-	QDockPanel* panel = qobject_cast<QDockPanel*>(builder.getWidget());
-	if (panel && lastMaskArea_ != NoneArea)
-	{
-		e->accept();
-		manager_->dockPanelTo(panel, this, lastMaskArea_);
-	}
-	else
-	{
-		e->ignore();
-	}
-
-	lastMaskArea_ = NoneArea;
-	arrows_.show(NoneArea);
-	maskWidget_->showOnDockArea(NoneArea);
 }
 
 void QDockFrame::onDragEnterPanel()
@@ -221,7 +150,7 @@ void QDockFrame::dragLeave()
 	maskWidget_->showOnDockArea(NoneArea);
 }
 
-void QDockFrame::drop(QWidget* from, QPoint pos)
+void QDockFrame::drop(QWidget* from, QPoint /*pos*/)
 {
 	QDockPanel* panel = qobject_cast<QDockPanel*>(from);
 	if (panel && lastMaskArea_ != NoneArea)
@@ -236,7 +165,7 @@ void QDockFrame::drop(QWidget* from, QPoint pos)
 
 void QDockFrame::dragMove(const QPoint& pos)
 {
-	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
+	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(pos));
 	if (area != lastMaskArea_)
 	{
 		maskWidget_->showOnDockArea(area);

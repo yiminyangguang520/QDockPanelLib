@@ -166,7 +166,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="IAcceptDrop.cpp" />
-    <ClCompile Include="QDockDataBuilder.cpp" />
     <ClCompile Include="GeneratedFiles\qrc_DockResource.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>

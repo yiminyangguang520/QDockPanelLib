@@ -2,8 +2,9 @@
 #define QDOCKTABBAR_H
 
 #include <QTabBar>
+#include "IAcceptDrop.h"
 
-class QDockTabBar : public QTabBar
+class QDockTabBar : public QTabBar, public IAcceptDrop
 {
 	Q_OBJECT
 
@@ -28,11 +29,13 @@ signals:
 protected:
 	virtual void paintEvent(QPaintEvent *);
 
-	virtual void dragMoveEvent(QDragMoveEvent *);
+	virtual void dragEnter();
 
-	virtual void dropEvent(QDropEvent *);
+	virtual void dragLeave();
 
-	virtual void dragEnterEvent(QDragEnterEvent *);
+	virtual void dragMove(const QPoint& pos);
+
+	virtual void drop(QWidget* from, QPoint pos);
 
 };
 

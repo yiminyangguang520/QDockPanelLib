@@ -77,18 +77,26 @@ void QDockTabBar::paintEvent(QPaintEvent * e)
 	p.drawRect(rc);
 }
 
-void QDockTabBar::dragEnterEvent(QDragEnterEvent *)
-{
 
+void QDockTabBar::dragEnter()
+{
+	//？？？
 }
 
-void QDockTabBar::dragMoveEvent(QDragMoveEvent *)
+void QDockTabBar::dragLeave()
 {
-	insertPos_ = tabAt(mapFromGlobal(QCursor::pos()));
+	insertPos_ = -1;
 	repaint();
 }
 
-void QDockTabBar::dropEvent(QDropEvent *)
+void QDockTabBar::dragMove(const QPoint& pos)
 {
+	//FIXME:无法插入到最后一个tab的后面
+	insertPos_ = tabAt(mapFromGlobal(pos));
+	repaint();
+}
 
+void QDockTabBar::drop(QWidget* from, QPoint pos)
+{
+	//TODO:在指定位置插入panel
 }

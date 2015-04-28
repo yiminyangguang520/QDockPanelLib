@@ -12,11 +12,11 @@ public:
 	QDockPanelTitle(QWidget *parent);
 	~QDockPanelTitle(){}
 
+	void startDrag();
 	virtual void paintEvent(QPaintEvent *);
 
 public slots:
 	void setTitle(const QString& title);
-	void startDrag();
 
 private:
 	virtual void mousePressEvent(QMouseEvent* e);

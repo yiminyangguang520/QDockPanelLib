@@ -8,6 +8,7 @@
 #include "QDockTabWidget.h"
 #include "QDockSideButton.h"
 #include "QDockSideBar.h"
+#include "QDockTabBar.h"
 
 QDockManager::QDockManager(QWidget *parent)
 	: QObject(parent), dockFrame_(new QDockFrame(this, parent))
@@ -441,6 +442,8 @@ bool QDockManager::autoHidePanel(QDockPanel* panel, bool hide)
 
 	panel->autoHideBtn_->deleteLater();
 	panel->autoHideBtn_ = NULL;
+
+	return true;
 }
 
 bool QDockManager::isRootNode(QDockNode* node)
@@ -1074,7 +1077,12 @@ bool QDockManager::dockPanelToDockedPanel(QDockPanel* from, QDockPanel* target, 
 
 IAcceptDrop* QDockManager::getDropTarget(const QPoint& pos, const QWidget* except)
 {
-	IAcceptDrop* target = findChild<QDockPanel>(pos, except);
+	IAcceptDrop* target = findChild<QDockTabBar>(pos, except);
+	if (!target)
+	{
+		target = findChild<QDockPanel>(pos, except);
+	}
+
 	if (!target)
 	{
 		target = dockFrame_->rect().contains(dockFrame_->mapFromGlobal(pos)) ? dockFrame_ : nullptr;

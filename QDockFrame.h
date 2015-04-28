@@ -22,16 +22,6 @@ public:
 	explicit QDockFrame(QDockManager* manager, QWidget *parent);
 	virtual ~QDockFrame();
 	void showArrow();
-
-protected:
-	virtual void dragEnterEvent(QDragEnterEvent *);
-
-	virtual void dragMoveEvent(QDragMoveEvent *);
-
-	virtual void dragLeaveEvent(QDragLeaveEvent *);
-
-	virtual void dropEvent(QDropEvent *);
-
 private:
 	QDockArrows arrows_;
 	QDockNode* rootNode_;

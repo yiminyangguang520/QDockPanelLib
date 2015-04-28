@@ -2,21 +2,11 @@
 #include <QResizeEvent>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QDrag>
-#include <QMimeData>
-#include <QCursor>
-#include <QByteArray>
-#include <QDataStream>
-#include "QDockDataBuilder.h"
 #include "QDockNode.h"
 #include <cassert>
 #include "QDockFrame.h"
 #include "QDockManager.h"
 #include "QDockMaskWidget.h"
-#include <QDragEnterEvent>
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
 #include <QDebug>
 
 
@@ -60,7 +50,7 @@ QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 		}
 		isLBtnPressed_ = true;
 		pressedPos_ = e->globalPos();
-		oldPos_ = pos();
+		oldPos_ = e->globalPos() - pos();
 		lastDragOverPanelOrFrame_ = nullptr;
 	};
 	title_->onTitleMouseReleaseEvent = [this](QMouseEvent* e)
@@ -83,11 +73,11 @@ QDockPanel::QDockPanel(QDockManager* manager, QWidget* frame)
 
 		if (dockStatus_ == Docked)
 		{
-			oldPos_ = parentWidget()->mapToGlobal(oldPos_);
+			oldPos_ -= parentWidget()->mapToGlobal(pos());
 			undock();
 		}
 
-		move(oldPos_.x() + e->globalX() - pressedPos_.x(), oldPos_.y() + e->globalY() - pressedPos_.y());
+		move(e->globalPos() - oldPos_);
 
 		if (QApplication::keyboardModifiers() == Qt::ControlModifier)
 		{
@@ -269,71 +259,6 @@ void QDockPanel::undock()
 	manager_->undockPanel(this);
 }
 
-void QDockPanel::dragEnterEvent(QDragEnterEvent* e)
-{
-	manager_->onDragEnterPanel();
-	const QMimeData* mimeData = e->mimeData();
-	if (mimeData && mimeData->hasFormat("dockpanellib/dockdata"))
-	{
-		showArrow();
-		e->accept();
-	}
-	else
-	{
-		e->ignore();
-	}
-}
-
-void QDockPanel::dragMoveEvent(QDragMoveEvent* e)
-{
-	DockArea area = arrows_.getDockAreaByPos(mapFromGlobal(QCursor::pos()));
-	if (area != lastMaskArea_)
-	{
-		maskWidget_->showOnDockArea(area);
-		lastMaskArea_ = area;
-	}
-	e->accept();
-}
-
-void QDockPanel::dragLeaveEvent(QDragLeaveEvent* e)
-{
-	manager_->onDragLeavePanel();
-	arrows_.show(NoneArea);
-	lastMaskArea_ = NoneArea;
-	maskWidget_->showOnDockArea(NoneArea);
-	e->accept();
-}
-
-void QDockPanel::dropEvent(QDropEvent* e)
-{
-	const QMimeData* mimeData = e->mimeData();
-	if (!mimeData->hasFormat("dockpanellib/dockdata"))
-	{
-		e->ignore();
-		return;
-	}
-	QByteArray ba = mimeData->data("dockpanellib/dockdata");
-	QDockDataBuilder builder;
-	builder.fromByteArray(ba);
-
-	QDockPanel* panel = qobject_cast<QDockPanel*>(builder.getWidget());
-	if (panel && lastMaskArea_ != NoneArea)
-	{
-		e->accept();
-		manager_->dockPanelTo(panel, this, lastMaskArea_);
-	}
-	else
-	{
-		e->ignore();
-	}
-
-	lastMaskArea_ = NoneArea;
-	arrows_.show(NoneArea);
-	maskWidget_->showOnDockArea(NoneArea);
-
-	manager_->onEndDragAtPanel();
-}
-
 void QDockPanel::dragEnter()
 {
 	showArrow();
@@ -345,7 +270,7 @@ void QDockPanel::dragLeave()
 	maskWidget_->showOnDockArea(NoneArea);
 }
 
-void QDockPanel::drop(QWidget* from, QPoint pos)
+void QDockPanel::drop(QWidget* from, QPoint /*pos*/)
 {
 	QDockPanel* panel = qobject_cast<QDockPanel*>(from);
 	if (panel && lastMaskArea_ != NoneArea)
@@ -377,7 +302,8 @@ void QDockPanel::showArrow()
 
 void QDockPanel::startDrag()
 {
-	title_->startDrag();
+ 	//title_->startDrag();
+	PostMessage((HWND)winId(), WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(0, 0));
 }
 
 void QDockPanel::setAutoHide(bool hide)

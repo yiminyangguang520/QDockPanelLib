@@ -107,9 +107,6 @@
     <ClCompile Include="Release\moc_QDockMaskWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="QDockDataBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="QDockManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -1,21 +1,24 @@
 #include "QDockPanelComponents.h"
 
 #include "QDockPanel.h"
-#include "QDockDataBuilder.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QApplication>
-#include <QDrag>
-#include <QMimeData>
 #include <QDebug>
 
 QDockPanelTitle::QDockPanelTitle(QWidget *parent)
 	:QWidget(parent), isLBtnPressed_(false),
 	mouseInCloseRect_(false), mouseInPinRect_(false)
 {
-	setMouseTracking(true);
+// 	setMouseTracking(true);
 	setPalette(QPalette(Qt::lightGray));
 	setAutoFillBackground(true);
+}
+
+void QDockPanelTitle::startDrag()
+{
+	//当从Tab中拖出来的时候会调用这里
+	//FIXME:想办法移动窗口
 }
 
 void QDockPanelTitle::paintEvent(QPaintEvent *)
@@ -65,12 +68,6 @@ void QDockPanelTitle::mousePressEvent(QMouseEvent* e)
 	{
 		onTitleMousePressEvent(e);
 	}
-// 	if (e->button() == Qt::LeftButton)
-// 	{
-// 		isLBtnPressed_ = true;
-// 		pressedPos_ = e->globalPos();
-// 		parentOldPos_ = parentWidget()->pos();
-// 	}
 }
 
 void QDockPanelTitle::mouseReleaseEvent(QMouseEvent* e)
@@ -89,7 +86,6 @@ void QDockPanelTitle::mouseReleaseEvent(QMouseEvent* e)
 	{
 		onTitleMouseReleaseEvent(e);
 	}
-// 	isLBtnPressed_ = false;
 }
 
 void QDockPanelTitle::mouseMoveEvent(QMouseEvent* e)
@@ -107,25 +103,6 @@ void QDockPanelTitle::mouseMoveEvent(QMouseEvent* e)
 	{
 		onTitleMouseMoveEvent(e);
 	}
-// 	if (!isLBtnPressed_)
-// 	{
-// 		return;
-// 	}
-// 
-// 	QDockPanel* panel = qobject_cast<QDockPanel*>(parentWidget());
-// 	if (panel && panel->dockStatus_ == Docked)
-// 	{
-// 		panel->undock();
-// 	}
-// 
-// 	if (QApplication::keyboardModifiers() != Qt::ControlModifier)
-// 	{
-// 		isLBtnPressed_ = false;
-// 		startDrag();
-// 		return;
-// 	}
-// 
-// 	parentWidget()->move(parentOldPos_.x() + e->globalX() - pressedPos_.x(), parentOldPos_.y() + e->globalY() - pressedPos_.y());
 }
 
 void QDockPanelTitle::resizeEvent(QResizeEvent *)
@@ -140,25 +117,6 @@ void QDockPanelTitle::mouseDoubleClickEvent(QMouseEvent *)
 	emit doubleClicked();
 }
 
-void QDockPanelTitle::startDrag()
-{
-	QMimeData* mimeData = new QMimeData;
-	QDockDataBuilder data;
-	data.setWidget(parentWidget());
-	mimeData->setData("dockpanellib/dockdata", data.toByteArray());
-	QDrag drag(this);
-	QPixmap pic(parentWidget()->size());
-	parentWidget()->render(&pic);
-	drag.setPixmap(pic);
-	drag.setMimeData(mimeData);
-	parentWidget()->hide();
-	if (drag.start() == Qt::IgnoreAction)
-	{
-		parentWidget()->move(QCursor::pos());
-	}
-	parentWidget()->show();
-	isLBtnPressed_ = false;
-}
 
 QDockPanelEdgeLeft::QDockPanelEdgeLeft(QWidget *parent)
 	:QWidget(parent), isLBtnPressed_(false)
